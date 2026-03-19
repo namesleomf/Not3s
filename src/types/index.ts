@@ -31,6 +31,7 @@ export interface Page {
   id: string
   title: string
   icon: string | null
+  coverImage: string | null // gradient/color preset key or URL
   parentId: string | null
   childrenIds: string[]
   blocks: Block[]

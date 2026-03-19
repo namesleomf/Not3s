@@ -22,6 +22,7 @@ export function createPage(overrides: Partial<Page> = {}): Page {
     id: nanoid(),
     title: '',
     icon: null,
+    coverImage: null,
     parentId: null,
     childrenIds: [],
     blocks: [createBlock('paragraph')],

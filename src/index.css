@@ -69,17 +69,17 @@
 [data-theme="paper-white"] {
   color-scheme: light;
 
-  /* Surfaces */
-  --color-bg-app: #f9f9f8;
-  --color-bg-sidebar: #f2f1ef;
+  /* Surfaces — warm paper tones */
+  --color-bg-app: #faf9f7;
+  --color-bg-sidebar: #f3f2ef;
   --color-bg-sidebar-elevated: #eae9e6;
-  --color-bg-content: #f9f9f8;
+  --color-bg-content: #faf9f7;
   --color-bg-page: #ffffff;
   --color-bg-overlay: #ffffff;
-  --color-bg-hover: rgba(0, 0, 0, 0.035);
-  --color-bg-active: rgba(0, 0, 0, 0.055);
-  --color-bg-selected: rgba(0, 0, 0, 0.055);
-  --color-bg-inset: #f4f4f2;
+  --color-bg-hover: rgba(0, 0, 0, 0.055);
+  --color-bg-active: rgba(0, 0, 0, 0.075);
+  --color-bg-selected: rgba(0, 0, 0, 0.06);
+  --color-bg-inset: #efeee9;
 
   /* Text */
   --color-text-primary: #1a1a1a;
@@ -135,15 +135,15 @@
   --color-bg-content: #0a0a0a;
   --color-bg-page: #111111;
   --color-bg-overlay: #1a1a1a;
-  --color-bg-hover: rgba(255, 255, 255, 0.05);
-  --color-bg-active: rgba(255, 255, 255, 0.08);
-  --color-bg-selected: rgba(96, 165, 250, 0.1);
+  --color-bg-hover: rgba(255, 255, 255, 0.06);
+  --color-bg-active: rgba(255, 255, 255, 0.10);
+  --color-bg-selected: rgba(96, 165, 250, 0.12);
   --color-bg-inset: #0d0d0d;
 
   /* Text */
   --color-text-primary: #e8e8e8;
-  --color-text-secondary: #888888;
-  --color-text-muted: #555555;
+  --color-text-secondary: #8a8a8a;
+  --color-text-muted: #636363;
   --color-text-placeholder: #444444;
   --color-text-inverse: #000000;
 

@@ -311,7 +311,7 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
               <img
                 src={src}
                 alt={alt}
-                className="max-w-full rounded-[var(--radius-lg)] border border-border"
+                className="max-w-full rounded-[var(--radius-lg)] border border-border shadow-sm"
                 loading="lazy"
               />
             ) : (
@@ -330,11 +330,12 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
 
   const isToggleOpen = block.type === 'toggle' && !!block.metadata.open
   const isCallout = block.type === 'callout'
+  const isQuote = block.type === 'quote'
 
   return (
     <div className={isDragged ? 'opacity-30' : ''}>
       <div
-        className={`group relative flex items-start py-0.5 px-1 ${dropIndicatorClass} ${isCallout ? 'bg-warning/5 border border-warning/15 rounded-[var(--radius-lg)] p-3 my-1' : ''}`}
+        className={`group relative flex items-start py-0.5 px-1 ${dropIndicatorClass} ${isCallout ? 'bg-warning/10 border border-warning/15 rounded-[var(--radius-lg)] p-3 my-1' : ''} ${isQuote ? 'bg-accent/[0.03] rounded-[var(--radius-md)] py-2 px-2 my-0.5' : ''}`}
         {...dragProps}
       >
         <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
