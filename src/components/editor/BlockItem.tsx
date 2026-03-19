@@ -389,7 +389,7 @@ function SlashCommandMenu({
   }, [onClose])
 
   return (
-    <div className="absolute left-0 sm:left-12 top-full z-30 mt-1 w-[220px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-separator rounded-[var(--radius-lg)] shadow-lg py-1 max-h-[320px] overflow-y-auto animate-[fadeIn_0.1s_ease]">
+    <div className="absolute left-0 sm:left-12 top-full z-30 mt-1.5 w-[240px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border rounded-[var(--radius-xl)] shadow-float py-1.5 max-h-[340px] overflow-y-auto animate-[fadeIn_0.1s_ease]">
       <div className="px-3 py-1.5">
         <span className="text-[11px] font-medium text-text-muted uppercase tracking-wider">
           Basic blocks
@@ -399,7 +399,8 @@ function SlashCommandMenu({
         <button
           key={item.type}
           onClick={() => onSelect(item.type)}
-          className="flex flex-col w-full px-3 py-1.5 text-left hover:bg-bg-hover transition-theme"
+          className="flex flex-col w-full px-3.5 py-2 text-left hover:bg-bg-hover rounded-[var(--radius-md)] mx-1 transition-theme"
+          style={{ width: 'calc(100% - 8px)' }}
         >
           <span className="text-[13px] text-text-primary">{item.label}</span>
           <span className="text-[11px] text-text-muted">{item.description}</span>

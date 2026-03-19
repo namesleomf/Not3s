@@ -21,10 +21,10 @@ export function SettingsPanel() {
       />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 z-50 w-[360px] max-w-[90vw] bg-bg-overlay border-l border-separator shadow-lg animate-[slideInFromRight_0.2s_ease-out] overflow-y-auto">
+      <div className="fixed right-0 top-0 bottom-0 z-50 w-[380px] max-w-[90vw] bg-bg-overlay border-l border-border shadow-float animate-[slideInFromRight_0.2s_ease-out] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between h-12 px-5 border-b border-separator flex-shrink-0">
-          <h2 className="text-[15px] font-semibold text-text-primary">Settings</h2>
+        <div className="flex items-center justify-between h-14 px-6 border-b border-separator flex-shrink-0">
+          <h2 className="text-[16px] font-semibold text-text-primary">Settings</h2>
           <IconButton size="md" label="Close settings" onClick={toggleSettingsPanel}>
             <X />
           </IconButton>
@@ -57,8 +57,8 @@ export function SettingsPanel() {
                     key={d}
                     onClick={() => updateSettings({ uiDensity: d })}
                     className={`
-                      h-7 px-3 text-[12px] font-medium capitalize
-                      rounded-[var(--radius-md)] transition-theme
+                      h-8 px-3.5 text-[12px] font-medium capitalize
+                      rounded-[var(--radius-pill)] transition-theme
                       ${settings.uiDensity === d
                         ? 'bg-bg-selected text-accent'
                         : 'text-text-secondary hover:bg-bg-hover'
@@ -124,8 +124,8 @@ export function SettingsPanel() {
                     key={v}
                     onClick={() => updateSettings({ defaultLandingView: v })}
                     className={`
-                      h-7 px-3 text-[12px] font-medium capitalize
-                      rounded-[var(--radius-md)] transition-theme
+                      h-8 px-3.5 text-[12px] font-medium capitalize
+                      rounded-[var(--radius-pill)] transition-theme
                       ${settings.defaultLandingView === v
                         ? 'bg-bg-selected text-accent'
                         : 'text-text-secondary hover:bg-bg-hover'
@@ -183,9 +183,9 @@ function ThemeOption({
     <button
       onClick={onClick}
       className={`
-        flex items-center gap-2 h-9 px-4
+        flex items-center gap-2.5 h-10 px-5
         text-[13px] font-medium
-        rounded-[var(--radius-lg)] transition-theme border
+        rounded-[var(--radius-pill)] transition-theme border
         ${active
           ? 'bg-bg-selected border-accent/30 text-accent'
           : 'bg-bg-hover border-transparent text-text-secondary hover:text-text-primary'

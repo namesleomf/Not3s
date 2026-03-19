@@ -18,12 +18,12 @@ export function SidebarHeader() {
   }
 
   return (
-    <div className="flex items-center justify-between h-12 px-3 flex-shrink-0">
-      <div className="flex items-center gap-2 min-w-0">
-        <div className="w-6 h-6 rounded-[var(--radius-sm)] bg-accent flex items-center justify-center flex-shrink-0">
-          <span className="text-[11px] font-bold text-text-inverse">N</span>
+    <div className="flex items-center justify-between h-14 px-4 flex-shrink-0">
+      <div className="flex items-center gap-2.5 min-w-0">
+        <div className="w-7 h-7 rounded-[var(--radius-md)] bg-text-primary flex items-center justify-center flex-shrink-0">
+          <span className="text-[12px] font-bold text-text-inverse">N</span>
         </div>
-        <span className="text-[13px] font-semibold text-text-primary truncate">
+        <span className="text-[14px] font-semibold text-text-primary truncate tracking-tight">
           Not3s
         </span>
       </div>

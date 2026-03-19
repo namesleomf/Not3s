@@ -10,7 +10,7 @@ export function SidebarFooter() {
 
   return (
     <>
-      <div className="flex items-center justify-between h-11 px-3 flex-shrink-0">
+      <div className="flex items-center justify-between h-12 px-4 flex-shrink-0">
         <IconButton
           size="md"
           label="Import pages"

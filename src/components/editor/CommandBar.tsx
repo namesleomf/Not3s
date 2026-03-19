@@ -93,27 +93,30 @@ export function CommandBar({ className = '', onUndo, onRedo, canUndo, canRedo }:
     ))
 
   return (
-    <div
-      className={`
-        flex items-center gap-0.5 px-2 h-10 flex-shrink-0
-        bg-bg-page border-b border-separator
-        overflow-x-auto scrollbar-none
-        ${className}
-      `}
-    >
-      {renderGroup(undoRedo)}
-      <Separator orientation="vertical" className="mx-1 h-5" />
-      {renderGroup(insertActions)}
-      <Separator orientation="vertical" className="mx-1 h-5" />
-      {renderGroup(blockTypes)}
-      <Separator orientation="vertical" className="mx-1 h-5 hidden sm:block" />
-      <span className="hidden sm:flex items-center gap-0.5">
-        {renderGroup(formatting)}
-      </span>
-      <Separator orientation="vertical" className="mx-1 h-5 hidden sm:block" />
-      <span className="hidden sm:flex items-center gap-0.5">
-        {renderGroup(extras)}
-      </span>
+    <div className={`flex items-center justify-center py-2 px-4 flex-shrink-0 ${className}`}>
+      <div
+        className="
+          inline-flex items-center gap-0.5 px-2 h-11
+          bg-bg-page border border-border
+          rounded-[var(--radius-pill)]
+          shadow-float
+          overflow-x-auto scrollbar-none
+        "
+      >
+        {renderGroup(undoRedo)}
+        <Separator orientation="vertical" className="mx-1.5 h-5" />
+        {renderGroup(insertActions)}
+        <Separator orientation="vertical" className="mx-1.5 h-5" />
+        {renderGroup(blockTypes)}
+        <Separator orientation="vertical" className="mx-1.5 h-5 hidden sm:block" />
+        <span className="hidden sm:flex items-center gap-0.5">
+          {renderGroup(formatting)}
+        </span>
+        <Separator orientation="vertical" className="mx-1.5 h-5 hidden sm:block" />
+        <span className="hidden sm:flex items-center gap-0.5">
+          {renderGroup(extras)}
+        </span>
+      </div>
     </div>
   )
 }

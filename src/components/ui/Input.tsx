@@ -23,11 +23,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={`
-            h-8 px-3 text-[13px] w-full
+            h-9 px-4 text-[13px] w-full
             bg-bg-inset text-text-primary
             placeholder:text-text-placeholder
             border border-border
-            rounded-[var(--radius-md)]
+            rounded-[var(--radius-lg)]
             transition-theme
             focus:outline-none focus:border-accent focus:ring-2 focus:ring-focus-ring
             disabled:opacity-40 disabled:pointer-events-none

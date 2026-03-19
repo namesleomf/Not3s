@@ -36,10 +36,10 @@ export function Dropdown({ trigger, children, align = 'left', className = '' }: 
         <div
           className={`
             absolute z-50 top-full mt-1
-            min-w-[180px] py-1
+            min-w-[200px] py-1.5
             bg-bg-overlay border border-border
             rounded-[var(--radius-lg)]
-            shadow-lg
+            shadow-float
             animate-[fadeIn_0.1s_ease,scaleIn_0.1s_ease]
             ${align === 'right' ? 'right-0' : 'left-0'}
             ${className}
@@ -73,8 +73,8 @@ export function DropdownItem({
   return (
     <button
       className={`
-        w-full flex items-center gap-2 px-3 h-8 text-[13px] text-left
-        transition-theme rounded-[var(--radius-sm)] mx-1
+        w-full flex items-center gap-2.5 px-3 h-9 text-[13px] text-left
+        transition-theme rounded-[var(--radius-md)] mx-1
         disabled:opacity-40 disabled:pointer-events-none
         ${danger
           ? 'text-danger hover:bg-danger-soft'

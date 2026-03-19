@@ -124,15 +124,15 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
   return (
     <Dialog open={open} onClose={handleClose} className="w-full max-w-[520px]">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-separator">
-        <h2 className="text-[15px] font-semibold text-text-primary">Import pages</h2>
+      <div className="flex items-center justify-between px-6 py-5 border-b border-separator">
+        <h2 className="text-[16px] font-semibold text-text-primary">Import pages</h2>
         <IconButton size="sm" label="Close" onClick={handleClose}>
           <X />
         </IconButton>
       </div>
 
       {/* Body */}
-      <div className="p-5 flex flex-col gap-4">
+      <div className="p-6 flex flex-col gap-4">
         {/* Drop zone */}
         <div
           onDragOver={(e) => {
@@ -144,7 +144,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
           onClick={() => inputRef.current?.click()}
           className={`
             flex flex-col items-center justify-center gap-3
-            h-[140px] rounded-[var(--radius-lg)]
+            h-[160px] rounded-[var(--radius-xl)]
             border-2 border-dashed cursor-pointer
             transition-theme
             ${dragOver
@@ -153,9 +153,11 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
             }
           `}
         >
-          <Upload
-            className={`w-8 h-8 ${dragOver ? 'text-accent' : 'text-text-muted'}`}
-          />
+          <div className={`w-12 h-12 rounded-[var(--radius-lg)] flex items-center justify-center ${dragOver ? 'bg-accent/10' : 'bg-bg-inset'}`}>
+            <Upload
+              className={`w-5 h-5 ${dragOver ? 'text-accent' : 'text-text-muted'}`}
+            />
+          </div>
           <div className="text-center">
             <p className="text-[13px] text-text-primary font-medium">
               Drop files here or click to browse
@@ -183,7 +185,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
             {files.map((file) => (
               <div
                 key={file.name}
-                className="flex items-center gap-3 px-3 py-2 rounded-[var(--radius-md)] bg-bg-inset"
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-[var(--radius-lg)] bg-bg-inset"
               >
                 {getFileIcon(file.name)}
                 <div className="flex-1 min-w-0">
@@ -227,7 +229,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-end gap-2 px-5 py-4 border-t border-separator">
+      <div className="flex items-center justify-end gap-2.5 px-6 py-5 border-t border-separator">
         <Button variant="ghost" size="md" onClick={handleClose}>
           Cancel
         </Button>

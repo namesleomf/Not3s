@@ -64,7 +64,7 @@ export function Dialog({ open, onClose, children, className = '' }: DialogProps)
       }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40 animate-[fadeIn_0.15s_ease]" />
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px] animate-[fadeIn_0.15s_ease]" />
 
       {/* Content */}
       <div
@@ -75,7 +75,7 @@ export function Dialog({ open, onClose, children, className = '' }: DialogProps)
           relative z-10
           bg-bg-overlay border border-border
           rounded-[var(--radius-xl)]
-          shadow-lg
+          shadow-float
           animate-[scaleIn_0.15s_ease]
           max-w-[90vw]
           ${className}

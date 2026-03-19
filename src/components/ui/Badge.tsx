@@ -18,9 +18,9 @@ export function Badge({ variant = 'default', className = '', children, ...props 
   return (
     <span
       className={`
-        inline-flex items-center h-5 px-1.5
-        text-[11px] font-medium leading-none
-        rounded-[var(--radius-sm)]
+        inline-flex items-center h-6 px-2.5
+        text-[12px] font-medium leading-none
+        rounded-[var(--radius-pill)]
         select-none whitespace-nowrap
         ${variantClasses[variant]}
         ${className}

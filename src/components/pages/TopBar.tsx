@@ -24,7 +24,7 @@ export function TopBar() {
   const { dispatch } = useWorkspace()
 
   return (
-    <div className="flex items-center h-12 px-3 flex-shrink-0 border-b border-separator">
+    <div className="flex items-center h-12 px-4 flex-shrink-0">
       {/* Left side */}
       <div className="flex items-center gap-1">
         {isMobile ? (

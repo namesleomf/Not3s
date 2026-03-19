@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { Smile, Image } from 'lucide-react'
 import { usePages } from '../../hooks/use-pages'
 import { IconPicker } from './IconPicker'
 import { TagManager } from './TagManager'
@@ -27,19 +28,59 @@ export function PageHeader() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      // Move focus to editor (Phase 6)
     }
   }
 
   return (
-    <div className="group px-4 sm:px-8 md:px-12 pt-6 sm:pt-10 pb-2 max-w-[720px] mx-auto w-full">
-      {/* Page icon */}
-      <div className="mb-3">
+    <div className="px-4 sm:px-8 md:px-12 pt-8 sm:pt-12 pb-3 max-w-[720px] mx-auto w-full">
+      {/* Chip controls row — visible on hover or when no icon set */}
+      <div className="flex items-center gap-2 mb-4 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200"
+        style={{ opacity: !selectedPage.icon ? 1 : undefined }}
+      >
         <IconPicker
           currentIcon={selectedPage.icon}
           onSelect={(icon) => update(selectedPage.id, { icon })}
         />
+        {!selectedPage.icon && (
+          <button
+            onClick={() => update(selectedPage.id, { icon: '📄' })}
+            className="
+              inline-flex items-center gap-2 h-8 px-3.5
+              text-[13px] text-text-muted font-medium
+              bg-transparent border border-border
+              rounded-[var(--radius-pill)]
+              hover:bg-bg-hover hover:text-text-secondary
+              transition-theme
+            "
+          >
+            <Smile className="w-4 h-4" />
+            Add page icon
+          </button>
+        )}
+        <button
+          className="
+            inline-flex items-center gap-2 h-8 px-3.5
+            text-[13px] text-text-muted font-medium
+            bg-transparent border border-border
+            rounded-[var(--radius-pill)]
+            hover:bg-bg-hover hover:text-text-secondary
+            transition-theme
+          "
+        >
+          <Image className="w-4 h-4" />
+          Add page cover
+        </button>
       </div>
+
+      {/* Page icon — shown when set */}
+      {selectedPage.icon && (
+        <div className="mb-3">
+          <IconPicker
+            currentIcon={selectedPage.icon}
+            onSelect={(icon) => update(selectedPage.id, { icon })}
+          />
+        </div>
+      )}
 
       {/* Editable title */}
       <h1
@@ -50,8 +91,8 @@ export function PageHeader() {
         onKeyDown={handleKeyDown}
         data-placeholder="Untitled"
         className="
-          text-[24px] sm:text-[28px] md:text-[32px] font-bold leading-tight text-text-primary
-          outline-none border-none
+          text-[26px] sm:text-[30px] md:text-[34px] font-bold leading-tight text-text-primary
+          outline-none border-none tracking-tight
           empty:before:content-[attr(data-placeholder)]
           empty:before:text-text-placeholder
           caret-accent
@@ -59,7 +100,7 @@ export function PageHeader() {
       />
 
       {/* Tags */}
-      <div className="mt-3">
+      <div className="mt-4">
         <TagManager />
       </div>
 

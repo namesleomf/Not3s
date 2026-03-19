@@ -8,9 +8,9 @@ export function QuickCreateButton() {
     <button
       onClick={() => create()}
       className="
-        w-full flex items-center gap-2 h-8 px-2.5
-        text-[13px] text-text-secondary
-        rounded-[var(--radius-md)] transition-theme
+        w-full flex items-center gap-2.5 h-9 px-3
+        text-[13px] font-medium text-text-secondary
+        rounded-[var(--radius-lg)] transition-theme
         hover:bg-bg-hover hover:text-text-primary
         active:bg-bg-active
       "

@@ -23,16 +23,16 @@ export function ConfirmDialog({
   variant = 'default',
 }: ConfirmDialogProps) {
   return (
-    <Dialog open={open} onClose={onClose} className="w-[380px] max-w-[90vw]">
-      <div className="p-5">
-        <h3 className="text-[15px] font-semibold text-text-primary mb-1.5">
+    <Dialog open={open} onClose={onClose} className="w-[400px] max-w-[90vw]">
+      <div className="p-6">
+        <h3 className="text-[16px] font-semibold text-text-primary mb-2">
           {title}
         </h3>
         <p className="text-[13px] text-text-secondary leading-relaxed">
           {description}
         </p>
       </div>
-      <div className="flex items-center justify-end gap-2 px-5 pb-4">
+      <div className="flex items-center justify-end gap-2.5 px-6 pb-5">
         <Button variant="ghost" size="sm" onClick={onClose}>
           {cancelLabel}
         </Button>

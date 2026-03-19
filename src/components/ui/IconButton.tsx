@@ -10,9 +10,9 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const sizeClasses: Record<IconButtonSize, string> = {
-  sm: 'w-6 h-6 [&_svg]:w-3.5 [&_svg]:h-3.5',
-  md: 'w-7 h-7 [&_svg]:w-4 [&_svg]:h-4',
-  lg: 'w-8 h-8 [&_svg]:w-[18px] [&_svg]:h-[18px]',
+  sm: 'w-7 h-7 [&_svg]:w-4 [&_svg]:h-4',
+  md: 'w-8 h-8 [&_svg]:w-[18px] [&_svg]:h-[18px]',
+  lg: 'w-9 h-9 [&_svg]:w-5 [&_svg]:h-5',
 }
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
