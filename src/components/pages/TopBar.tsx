@@ -15,9 +15,10 @@ import { usePages } from '../../hooks/use-pages'
 import { useSettings } from '../../hooks/use-settings'
 import { useResponsive } from '../../hooks/use-responsive'
 import { useWorkspace } from '../../context/workspace-context'
+import { Breadcrumb } from './Breadcrumb'
 
 export function TopBar() {
-  const { selectedPage, togglePin, toggleFavorite, duplicate, trash } = usePages()
+  const { selectedPage, togglePin, toggleFavorite, toggleArchive, duplicate, trash } = usePages()
   const { settings, updateSettings } = useSettings()
   const { isMobile } = useResponsive()
   const { dispatch } = useWorkspace()
@@ -46,6 +47,7 @@ export function TopBar() {
 
         {selectedPage && (
           <div className="flex items-center gap-1 ml-1 min-w-0">
+            {selectedPage.parentId && <Breadcrumb pageId={selectedPage.id} />}
             {selectedPage.icon && (
               <span className="text-[14px]">{selectedPage.icon}</span>
             )}
@@ -96,7 +98,7 @@ export function TopBar() {
             </DropdownItem>
             <DropdownItem
               icon={<Archive />}
-              onClick={() => {/* Phase 5 */}}
+              onClick={() => toggleArchive(selectedPage.id)}
             >
               Archive
             </DropdownItem>

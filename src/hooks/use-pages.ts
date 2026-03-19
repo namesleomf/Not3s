@@ -110,8 +110,12 @@ export function usePages() {
   const select = useCallback(
     (id: string | null) => {
       dispatch({ type: 'UI_SELECT_PAGE', payload: { id } })
+      // Auto-close mobile sidebar on selection
+      if (id && state.ui.sidebarOpenMobile) {
+        dispatch({ type: 'UI_TOGGLE_SIDEBAR_MOBILE' })
+      }
     },
-    [dispatch],
+    [dispatch, state.ui.sidebarOpenMobile],
   )
 
   const move = useCallback(

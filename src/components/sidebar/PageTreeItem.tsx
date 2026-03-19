@@ -1,4 +1,4 @@
-import { ChevronRight, FileText, Star, Pin } from 'lucide-react'
+import { ChevronRight, FileText, Star, Pin, Plus } from 'lucide-react'
 import { usePages } from '../../hooks/use-pages'
 import { useWorkspace } from '../../context/workspace-context'
 
@@ -8,7 +8,7 @@ interface PageTreeItemProps {
 }
 
 export function PageTreeItem({ pageId, depth }: PageTreeItemProps) {
-  const { pages, selectedPageId, select } = usePages()
+  const { pages, selectedPageId, select, create } = usePages()
   const { state, dispatch } = useWorkspace()
   const page = pages[pageId]
 
@@ -21,6 +21,15 @@ export function PageTreeItem({ pageId, depth }: PageTreeItemProps) {
   const handleToggleExpand = (e: React.MouseEvent) => {
     e.stopPropagation()
     dispatch({ type: 'UI_TOGGLE_PAGE_EXPANDED', payload: { id: pageId } })
+  }
+
+  const handleCreateChild = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    create({ parentId: pageId })
+    // Auto-expand parent to show the new child
+    if (!isExpanded) {
+      dispatch({ type: 'UI_TOGGLE_PAGE_EXPANDED', payload: { id: pageId } })
+    }
   }
 
   return (
@@ -64,8 +73,15 @@ export function PageTreeItem({ pageId, depth }: PageTreeItemProps) {
           {page.title || 'Untitled'}
         </span>
 
-        {/* Status indicators */}
+        {/* Action buttons — visible on hover */}
         <span className="flex items-center gap-0.5 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span
+            onClick={handleCreateChild}
+            className="flex items-center justify-center w-4 h-4 rounded-[var(--radius-sm)] hover:bg-bg-active text-text-muted hover:text-text-primary cursor-pointer"
+            title="Add sub-page"
+          >
+            <Plus className="w-3 h-3" />
+          </span>
           {page.isPinned && <Pin className="w-3 h-3 text-text-muted" />}
           {page.isFavorite && <Star className="w-3 h-3 text-warning fill-warning" />}
         </span>

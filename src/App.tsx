@@ -5,12 +5,39 @@ import { TopBar } from './components/pages/TopBar'
 import { PageHeader } from './components/pages/PageHeader'
 import { CommandBar } from './components/editor/CommandBar'
 import { NoPageSelected } from './components/pages/NoPageSelected'
+import { TrashView } from './components/pages/TrashView'
+import { ArchiveView } from './components/pages/ArchiveView'
 import { SettingsPanel } from './components/settings/SettingsPanel'
 import { usePages } from './hooks/use-pages'
+import { useSearch } from './hooks/use-search'
+import { useKeyboardShortcuts } from './hooks/use-keyboard-shortcuts'
 
 function MainContent() {
   const { selectedPage } = usePages()
+  const { activeFilter } = useSearch()
+  useKeyboardShortcuts()
 
+  // Trash view
+  if (activeFilter === 'trash') {
+    return (
+      <>
+        <TopBar />
+        <TrashView />
+      </>
+    )
+  }
+
+  // Archive view
+  if (activeFilter === 'archived') {
+    return (
+      <>
+        <TopBar />
+        <ArchiveView />
+      </>
+    )
+  }
+
+  // No page selected
   if (!selectedPage) {
     return (
       <>
@@ -20,6 +47,7 @@ function MainContent() {
     )
   }
 
+  // Page editor view
   return (
     <>
       <TopBar />
