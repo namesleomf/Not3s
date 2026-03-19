@@ -20,10 +20,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const { state, dispatch } = useWorkspace()
   const theme = state.settings.theme
 
-  // Apply data-theme attribute to <html>
+  const density = state.settings.uiDensity
+
+  // Apply data-theme and data-density attributes to <html>
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-density', density)
+  }, [density])
 
   const setTheme = useCallback(
     (newTheme: ThemeMode) => {

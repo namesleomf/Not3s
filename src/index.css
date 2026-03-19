@@ -1,1 +1,265 @@
 @import "tailwindcss";
+
+/* ============================================================
+   Not3s — Design System Tokens
+   ============================================================
+   All visual tokens are CSS custom properties, consumed by
+   Tailwind v4 via @theme. Never use raw hex in components.
+   ============================================================ */
+
+/* ---- Tailwind theme mapping ---- */
+@theme {
+  /* Surfaces */
+  --color-bg-app: var(--color-bg-app);
+  --color-bg-sidebar: var(--color-bg-sidebar);
+  --color-bg-sidebar-elevated: var(--color-bg-sidebar-elevated);
+  --color-bg-content: var(--color-bg-content);
+  --color-bg-page: var(--color-bg-page);
+  --color-bg-overlay: var(--color-bg-overlay);
+  --color-bg-hover: var(--color-bg-hover);
+  --color-bg-active: var(--color-bg-active);
+  --color-bg-selected: var(--color-bg-selected);
+  --color-bg-inset: var(--color-bg-inset);
+
+  /* Text */
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-placeholder: var(--color-text-placeholder);
+  --color-text-inverse: var(--color-text-inverse);
+
+  /* Borders & Separators */
+  --color-border: var(--color-border);
+  --color-separator: var(--color-separator);
+
+  /* Accent & Semantic */
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+  --color-danger-soft: var(--color-danger-soft);
+
+  /* Focus */
+  --color-focus-ring: var(--color-focus-ring);
+
+  /* Shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  /* Radii */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  /* Typography */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* ============================================================
+   Paper White Theme (default)
+   ============================================================ */
+:root,
+[data-theme="paper-white"] {
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-bg-app: #f8f8f7;
+  --color-bg-sidebar: #f0efed;
+  --color-bg-sidebar-elevated: #e8e7e4;
+  --color-bg-content: #f8f8f7;
+  --color-bg-page: #ffffff;
+  --color-bg-overlay: #ffffff;
+  --color-bg-hover: rgba(0, 0, 0, 0.04);
+  --color-bg-active: rgba(0, 0, 0, 0.06);
+  --color-bg-selected: rgba(37, 99, 235, 0.08);
+  --color-bg-inset: #f3f3f1;
+
+  /* Text */
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #6b6b6b;
+  --color-text-muted: #999999;
+  --color-text-placeholder: #b3b3b3;
+  --color-text-inverse: #ffffff;
+
+  /* Borders & Separators */
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-separator: rgba(0, 0, 0, 0.05);
+
+  /* Accent */
+  --color-accent: #2563eb;
+  --color-accent-soft: rgba(37, 99, 235, 0.08);
+  --color-accent-hover: #1d4ed8;
+  --color-success: #16a34a;
+  --color-warning: #ca8a04;
+  --color-danger: #dc2626;
+  --color-danger-soft: rgba(220, 38, 38, 0.08);
+
+  /* Focus */
+  --color-focus-ring: rgba(37, 99, 235, 0.4);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Menlo", ui-monospace, monospace;
+}
+
+/* ============================================================
+   OLED Black Theme
+   ============================================================ */
+[data-theme="oled-black"] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --color-bg-app: #000000;
+  --color-bg-sidebar: #0a0a0a;
+  --color-bg-sidebar-elevated: #161616;
+  --color-bg-content: #0a0a0a;
+  --color-bg-page: #111111;
+  --color-bg-overlay: #1a1a1a;
+  --color-bg-hover: rgba(255, 255, 255, 0.05);
+  --color-bg-active: rgba(255, 255, 255, 0.08);
+  --color-bg-selected: rgba(96, 165, 250, 0.1);
+  --color-bg-inset: #0d0d0d;
+
+  /* Text */
+  --color-text-primary: #e8e8e8;
+  --color-text-secondary: #888888;
+  --color-text-muted: #555555;
+  --color-text-placeholder: #444444;
+  --color-text-inverse: #000000;
+
+  /* Borders & Separators */
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-separator: rgba(255, 255, 255, 0.05);
+
+  /* Accent */
+  --color-accent: #3b82f6;
+  --color-accent-soft: rgba(59, 130, 246, 0.12);
+  --color-accent-hover: #60a5fa;
+  --color-success: #22c55e;
+  --color-warning: #eab308;
+  --color-danger: #ef4444;
+  --color-danger-soft: rgba(239, 68, 68, 0.12);
+
+  /* Focus */
+  --color-focus-ring: rgba(59, 130, 246, 0.4);
+
+  /* Shadows — more subtle on true black */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================================
+   Density Modifiers
+   ============================================================ */
+[data-density="compact"] {
+  --density-factor: 0.85;
+}
+[data-density="default"],
+:root {
+  --density-factor: 1;
+}
+[data-density="comfortable"] {
+  --density-factor: 1.15;
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background: var(--color-bg-app);
+}
+
+#root {
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ---- Scrollbar styling ---- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ---- Selection ---- */
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-text-primary);
+}
+
+/* ---- Focus visible ---- */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---- Transitions ---- */
+.transition-theme {
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* ---- Keyframes ---- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInFromLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
