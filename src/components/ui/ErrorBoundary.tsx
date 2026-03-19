@@ -1,0 +1,49 @@
+import { Component, type ReactNode } from 'react'
+
+interface Props {
+  children: ReactNode
+  fallbackMessage?: string
+}
+
+interface State {
+  hasError: boolean
+  error: Error | null
+}
+
+export class ErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false, error: null }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error }
+  }
+
+  handleReset = () => {
+    this.setState({ hasError: false, error: null })
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+          <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-danger-soft flex items-center justify-center mb-4">
+            <span className="text-danger text-lg">!</span>
+          </div>
+          <h2 className="text-[15px] font-semibold text-text-primary mb-1">
+            {this.props.fallbackMessage || 'Something went wrong'}
+          </h2>
+          <p className="text-[13px] text-text-muted mb-4 max-w-xs">
+            {this.state.error?.message || 'An unexpected error occurred.'}
+          </p>
+          <button
+            onClick={this.handleReset}
+            className="px-4 py-2 text-[13px] font-medium text-accent bg-accent/10 hover:bg-accent/15 rounded-[var(--radius-lg)] transition-theme"
+          >
+            Try again
+          </button>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}

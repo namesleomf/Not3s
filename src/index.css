@@ -20,6 +20,7 @@
   --color-bg-active: var(--color-bg-active);
   --color-bg-selected: var(--color-bg-selected);
   --color-bg-inset: var(--color-bg-inset);
+  --color-bg-code: var(--color-bg-code);
 
   /* Text */
   --color-text-primary: var(--color-text-primary);
@@ -80,6 +81,7 @@
   --color-bg-active: rgba(0, 0, 0, 0.075);
   --color-bg-selected: rgba(0, 0, 0, 0.06);
   --color-bg-inset: #efeee9;
+  --color-bg-code: rgba(0, 0, 0, 0.04);
 
   /* Text */
   --color-text-primary: #1a1a1a;
@@ -139,6 +141,7 @@
   --color-bg-active: rgba(255, 255, 255, 0.10);
   --color-bg-selected: rgba(96, 165, 250, 0.12);
   --color-bg-inset: #0d0d0d;
+  --color-bg-code: rgba(255, 255, 255, 0.06);
 
   /* Text */
   --color-text-primary: #e8e8e8;
