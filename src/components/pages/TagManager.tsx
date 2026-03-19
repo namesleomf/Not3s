@@ -62,7 +62,7 @@ export function TagManager() {
       {currentTags.map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[11px] bg-bg-hover text-text-secondary rounded-[var(--radius-sm)] group/tag"
+          className="inline-flex items-center gap-1 px-2 py-1 sm:px-1.5 sm:py-0.5 text-[12px] sm:text-[11px] bg-bg-hover text-text-secondary rounded-[var(--radius-sm)] group/tag"
         >
           {tag}
           <button
@@ -96,7 +96,7 @@ export function TagManager() {
             }}
             onFocus={() => setShowSuggestions(true)}
             placeholder="Tag name..."
-            className="w-[80px] px-1.5 py-0.5 text-[11px] bg-transparent text-text-primary border border-separator rounded-[var(--radius-sm)] outline-none focus:border-accent"
+            className="w-24 sm:w-[80px] px-2 py-1.5 sm:py-0.5 text-[13px] sm:text-[11px] bg-transparent text-text-primary border border-separator rounded-[var(--radius-sm)] outline-none focus:border-accent"
           />
 
           {/* Suggestions dropdown */}
@@ -120,7 +120,7 @@ export function TagManager() {
       ) : (
         <button
           onClick={() => setIsAdding(true)}
-          className="inline-flex items-center gap-0.5 px-1 py-0.5 text-[11px] text-text-muted hover:text-text-secondary hover:bg-bg-hover rounded-[var(--radius-sm)] transition-theme"
+          className="inline-flex items-center gap-0.5 px-2 py-1 sm:px-1 sm:py-0.5 text-[12px] sm:text-[11px] text-text-muted hover:text-text-secondary hover:bg-bg-hover rounded-[var(--radius-sm)] transition-theme"
         >
           <Plus className="w-2.5 h-2.5" />
           Add tag

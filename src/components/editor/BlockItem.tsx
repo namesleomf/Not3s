@@ -46,9 +46,9 @@ const placeholders: Partial<Record<BlockType, string>> = {
 
 // CSS classes per block type
 const typeStyles: Partial<Record<BlockType, string>> = {
-  heading1: 'text-[28px] font-bold leading-tight',
-  heading2: 'text-[22px] font-semibold leading-tight',
-  heading3: 'text-[18px] font-semibold leading-snug',
+  heading1: 'text-[22px] sm:text-[28px] font-bold leading-tight',
+  heading2: 'text-[18px] sm:text-[22px] font-semibold leading-tight',
+  heading3: 'text-[16px] sm:text-[18px] font-semibold leading-snug',
   'bullet-list': 'text-[15px] leading-relaxed',
   'numbered-list': 'text-[15px] leading-relaxed',
   todo: 'text-[15px] leading-relaxed',
@@ -380,7 +380,7 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
 
       {/* Toggle children */}
       {isToggleOpen && (
-        <div className="ml-8 pl-3 border-l-2 border-separator">
+        <div className="ml-4 sm:ml-8 pl-3 border-l-2 border-separator">
           {block.children.length > 0 ? (
             block.children.map((child) => (
               <BlockItem key={child.id} block={child} editor={editor} drag={drag} />
@@ -442,7 +442,7 @@ function BlockHandle({ onAdd, onDragStart, blockType, onTurnInto }: {
     <div className="flex items-center gap-0.5 mr-1 mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex-shrink-0">
       <button
         onClick={onAdd}
-        className="flex items-center justify-center w-7 h-7 sm:w-5 sm:h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover hover:text-text-primary transition-theme"
+        className="flex items-center justify-center w-7 h-7 md:w-5 md:h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover hover:text-text-primary transition-theme"
         title="Add block below"
       >
         <Plus className="w-3.5 h-3.5" />
@@ -452,7 +452,7 @@ function BlockHandle({ onAdd, onDragStart, blockType, onTurnInto }: {
           draggable={!!onDragStart}
           onDragStart={onDragStart}
           onClick={() => setShowTurnInto(!showTurnInto)}
-          className="flex items-center justify-center w-7 h-7 sm:w-5 sm:h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover cursor-grab active:cursor-grabbing transition-theme"
+          className="flex items-center justify-center w-7 h-7 md:w-5 md:h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover cursor-grab active:cursor-grabbing transition-theme"
         >
           <GripVertical className="w-3.5 h-3.5" />
         </span>

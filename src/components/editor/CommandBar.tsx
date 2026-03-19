@@ -130,7 +130,7 @@ export function CommandBar({ className = '' }: { className?: string }) {
       <div className="relative max-w-full">
         <div
           className="
-            inline-flex items-center gap-0.5 px-2 h-12 sm:h-11
+            inline-flex items-center gap-0.5 px-1.5 sm:px-2 h-11
             bg-bg-overlay border border-border
             rounded-[var(--radius-pill)]
             shadow-float backdrop-blur-sm

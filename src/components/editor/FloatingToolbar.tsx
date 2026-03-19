@@ -150,7 +150,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
           onClick={() => execFormat(command)}
           title={`${label} (${shortcut})`}
           className={`
-            flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] transition-theme
+            flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-[var(--radius-md)] transition-theme
             ${isActive(command)
               ? 'bg-accent/20 text-accent'
               : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'}
@@ -166,7 +166,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
       <button
         onClick={execCode}
         title="Inline Code"
-        className="flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-theme"
+        className="flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-[var(--radius-md)] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-theme"
       >
         <Code className="w-3.5 h-3.5" />
       </button>
@@ -175,7 +175,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
       <button
         onClick={execLink}
         title="Link"
-        className="flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-theme"
+        className="flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-[var(--radius-md)] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-theme"
       >
         <Link className="w-3.5 h-3.5" />
       </button>
@@ -186,7 +186,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
           onClick={() => setShowHighlightPicker(!showHighlightPicker)}
           title="Highlight"
           className={`
-            flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] transition-theme
+            flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-[var(--radius-md)] transition-theme
             ${showHighlightPicker
               ? 'bg-accent/20 text-accent'
               : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'}
@@ -205,7 +205,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
                 key={label}
                 onClick={() => execHighlight(color)}
                 title={label}
-                className="w-5 h-5 rounded-full border border-separator hover:scale-110 transition-transform"
+                className="w-7 h-7 sm:w-5 sm:h-5 rounded-full border border-separator hover:scale-110 transition-transform"
                 style={{ backgroundColor: color }}
               />
             ))}

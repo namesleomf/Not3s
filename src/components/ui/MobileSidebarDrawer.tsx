@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useCallback, useState, type ReactNode } from 'react'
 
 interface MobileSidebarDrawerProps {
   open: boolean
@@ -8,6 +8,9 @@ interface MobileSidebarDrawerProps {
 
 export function MobileSidebarDrawer({ open, onClose, children }: MobileSidebarDrawerProps) {
   const backdropRef = useRef<HTMLDivElement>(null)
+  const drawerRef = useRef<HTMLDivElement>(null)
+  const [translateX, setTranslateX] = useState(0)
+  const touchStart = useRef<{ x: number; t: number } | null>(null)
 
   useEffect(() => {
     if (!open) return
@@ -28,7 +31,40 @@ export function MobileSidebarDrawer({ open, onClose, children }: MobileSidebarDr
     }
   }, [open])
 
+  // Reset translate when opened
+  useEffect(() => {
+    if (open) setTranslateX(0)
+  }, [open])
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, t: Date.now() }
+  }, [])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchStart.current) return
+    const dx = e.touches[0].clientX - touchStart.current.x
+    // Only track leftward swipes
+    if (dx < 0) {
+      setTranslateX(dx)
+    }
+  }, [])
+
+  const handleTouchEnd = useCallback(() => {
+    if (!touchStart.current) return
+    const elapsed = Date.now() - touchStart.current.t
+    // Close if swiped far enough or fast enough
+    if (translateX < -80 || (translateX < -30 && elapsed < 200)) {
+      onClose()
+    }
+    setTranslateX(0)
+    touchStart.current = null
+  }, [translateX, onClose])
+
   if (!open) return null
+
+  const drawerStyle: React.CSSProperties = translateX < 0
+    ? { transform: `translateX(${translateX}px)`, transition: 'none' }
+    : {}
 
   return (
     <div className="fixed inset-0 z-50 flex">
@@ -41,7 +77,12 @@ export function MobileSidebarDrawer({ open, onClose, children }: MobileSidebarDr
 
       {/* Drawer */}
       <div
-        className="relative z-10 h-full w-[280px] max-w-[85vw] animate-[slideInFromLeft_0.2s_ease-out]"
+        ref={drawerRef}
+        className="relative z-10 h-full w-[75vw] max-w-[300px] animate-[slideInFromLeft_0.2s_ease-out]"
+        style={drawerStyle}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {children}
       </div>

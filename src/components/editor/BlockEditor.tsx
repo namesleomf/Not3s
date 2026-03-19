@@ -75,7 +75,7 @@ export function BlockEditor() {
 
       {/* Click below blocks to add a new one */}
       <div
-        className="min-h-[200px] cursor-text"
+        className="min-h-[80px] sm:min-h-[200px] cursor-text"
         onClick={() => {
           const lastBlock = editor.blocks[editor.blocks.length - 1]
           if (lastBlock && lastBlock.content === '' && lastBlock.type === 'paragraph') {

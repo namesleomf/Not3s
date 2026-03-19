@@ -30,7 +30,7 @@ function EditorView() {
       <div className="flex-1 flex overflow-hidden">
         <div className="flex-1 overflow-y-auto bg-bg-page">
           <PageHeader />
-          <div className="px-4 sm:px-8 md:px-12 pb-32 max-w-[720px] mx-auto w-full">
+          <div className="px-3 sm:px-8 md:px-12 pb-16 sm:pb-32 max-w-[720px] mx-auto w-full">
             <ErrorBoundary fallbackMessage="Editor encountered an error">
               <BlockEditor />
             </ErrorBoundary>

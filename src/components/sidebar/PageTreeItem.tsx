@@ -176,10 +176,10 @@ export function PageTreeItem({ pageId, depth }: PageTreeItemProps) {
           </span>
 
           {/* Action buttons — visible on hover */}
-          <span className="flex items-center gap-0.5 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="flex items-center gap-0.5 flex-shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
             <span
               onClick={handleCreateChild}
-              className="flex items-center justify-center w-4 h-4 rounded-[var(--radius-sm)] hover:bg-bg-active text-text-muted hover:text-text-primary cursor-pointer"
+              className="flex items-center justify-center w-7 h-7 sm:w-4 sm:h-4 rounded-[var(--radius-sm)] hover:bg-bg-active text-text-muted hover:text-text-primary cursor-pointer"
               title="Add sub-page"
             >
               <Plus className="w-3 h-3" />

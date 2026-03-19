@@ -132,13 +132,13 @@ export function IconPicker({ currentIcon, onSelect }: IconPickerProps) {
                   <div className="text-[10px] font-medium text-text-muted uppercase tracking-wider px-1 mb-1">
                     {section.label}
                   </div>
-                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-0.5">
+                  <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-0.5">
                     {filtered.map((emoji) => (
                       <button
                         key={emoji}
                         onClick={() => handleSelect(emoji)}
                         className={`
-                          flex items-center justify-center w-10 h-10 sm:w-8 sm:h-8 text-[18px] rounded-[var(--radius-sm)] hover:bg-bg-hover transition-theme
+                          flex items-center justify-center w-10 h-10 text-[18px] rounded-[var(--radius-sm)] hover:bg-bg-hover transition-theme
                           ${currentIcon === emoji ? 'bg-accent/20 ring-1 ring-accent' : ''}
                         `}
                       >

@@ -67,7 +67,7 @@ export function PageHeader() {
     <>
       {/* Page cover — full width */}
       {hasCover && (
-        <div className="relative group/cover w-full h-[180px] sm:h-[220px]" style={getCoverStyle(selectedPage.coverImage!)}>
+        <div className="relative group/cover w-full h-[140px] sm:h-[180px] md:h-[220px]" style={getCoverStyle(selectedPage.coverImage!)}>
           <div className="absolute bottom-2 right-2 flex items-center gap-1 opacity-0 group-hover/cover:opacity-100 transition-opacity duration-200">
             <button
               onClick={() => setShowCoverPicker(!showCoverPicker)}
@@ -91,7 +91,7 @@ export function PageHeader() {
           <div className="px-4 sm:px-8 md:px-12">
             <div className="bg-bg-overlay border border-border rounded-[var(--radius-lg)] shadow-lg p-3 mt-2">
               <div className="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-2">Cover presets</div>
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 {COVER_PRESETS.map((preset) => (
                   <button
                     key={preset.key}
@@ -121,8 +121,8 @@ export function PageHeader() {
             <button
               onClick={() => update(selectedPage.id, { icon: '📄' })}
               className="
-                inline-flex items-center gap-2 h-7 px-3
-                text-[12px] text-text-muted font-medium
+                inline-flex items-center gap-2 h-9 sm:h-7 px-3
+                text-[13px] sm:text-[12px] text-text-muted font-medium
                 bg-bg-inset border-none
                 rounded-[var(--radius-md)]
                 hover:bg-bg-hover hover:text-text-secondary
@@ -138,8 +138,8 @@ export function PageHeader() {
             <button
               onClick={() => setShowCoverPicker(!showCoverPicker)}
               className="
-                inline-flex items-center gap-2 h-7 px-3
-                text-[12px] text-text-muted font-medium
+                inline-flex items-center gap-2 h-9 sm:h-7 px-3
+                text-[13px] sm:text-[12px] text-text-muted font-medium
                 bg-bg-inset border-none
                 rounded-[var(--radius-md)]
                 hover:bg-bg-hover hover:text-text-secondary
@@ -172,7 +172,7 @@ export function PageHeader() {
         onKeyDown={handleKeyDown}
         data-placeholder="Untitled"
         className="
-          text-[26px] sm:text-[30px] md:text-[34px] font-bold leading-tight text-text-primary
+          text-[20px] sm:text-[26px] md:text-[30px] lg:text-[34px] font-bold leading-tight text-text-primary
           outline-none border-none tracking-tight
           empty:before:content-[attr(data-placeholder)]
           empty:before:text-text-placeholder

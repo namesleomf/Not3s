@@ -20,16 +20,16 @@ export function SettingsPanel() {
       />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 z-50 w-[420px] max-w-[90vw] bg-bg-overlay border-l border-border shadow-float animate-[slideInFromRight_0.2s_ease-out] overflow-y-auto">
+      <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[420px] sm:max-w-[90vw] bg-bg-overlay border-l border-border shadow-float animate-[slideInFromRight_0.2s_ease-out] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between h-14 px-6 border-b border-separator flex-shrink-0">
+        <div className="flex items-center justify-between h-14 px-4 sm:px-6 border-b border-separator flex-shrink-0">
           <h2 className="text-[16px] font-semibold text-text-primary">Settings</h2>
           <IconButton size="md" label="Close settings" onClick={toggleSettingsPanel}>
             <X />
           </IconButton>
         </div>
 
-        <div className="p-5 flex flex-col gap-5">
+        <div className="p-4 sm:p-5 flex flex-col gap-5">
           {/* Appearance */}
           <SettingsCard icon={<Palette className="w-4 h-4" />} title="Appearance">
             <SettingsRow label="Theme">

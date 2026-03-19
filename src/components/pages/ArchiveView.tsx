@@ -24,7 +24,7 @@ export function ArchiveView() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="max-w-[640px] mx-auto px-6 py-8">
+      <div className="max-w-[640px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="mb-6">
           <h2 className="text-[18px] font-semibold text-text-primary">Archive</h2>
           <p className="text-[12px] text-text-muted mt-0.5">
@@ -52,7 +52,7 @@ export function ArchiveView() {
                   Archived {new Date(page.updatedAt).toLocaleDateString()}
                 </span>
               </div>
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 <Button
                   variant="ghost"
                   size="sm"

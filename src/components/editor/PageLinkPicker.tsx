@@ -63,8 +63,8 @@ export function PageLinkPicker({ position, initialQuery, onSelect, onClose }: Pa
 
   return (
     <div
-      className="fixed z-50 w-[280px] bg-bg-overlay border border-border rounded-[var(--radius-xl)] shadow-float overflow-hidden animate-[fadeIn_0.1s_ease]"
-      style={{ top: position.top, left: position.left }}
+      className="fixed z-50 w-[280px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border rounded-[var(--radius-xl)] shadow-float overflow-hidden animate-[fadeIn_0.1s_ease]"
+      style={{ top: position.top, left: Math.min(position.left, window.innerWidth - 296) }}
       onMouseDown={(e) => e.preventDefault()}
     >
       <div className="flex items-center gap-2 px-3 py-2.5 border-b border-separator">

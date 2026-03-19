@@ -90,7 +90,7 @@ export function CommandPalette() {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-5 py-3.5">
+        <div className="flex items-center gap-3 px-3 sm:px-5 py-3">
           <Search className="w-[18px] h-[18px] text-text-muted flex-shrink-0" />
           <input
             ref={inputRef}
@@ -110,7 +110,7 @@ export function CommandPalette() {
         <div className="h-px bg-separator/60" />
 
         {/* Results */}
-        <div ref={listRef} className="max-h-[60vh] sm:max-h-[380px] overflow-y-auto py-1">
+        <div ref={listRef} className="max-h-[50vh] sm:max-h-[380px] overflow-y-auto py-1">
           {flatItems.length === 0 ? (
             <div className="px-5 py-10 text-center text-[13px] text-text-muted">
               No matching commands
@@ -146,7 +146,7 @@ export function CommandPalette() {
 
         {/* Footer */}
         <div className="h-px bg-separator/60" />
-        <div className="flex items-center gap-4 px-5 py-2 text-[11px] text-text-muted/70">
+        <div className="hidden sm:flex items-center gap-4 px-5 py-2 text-[11px] text-text-muted/70">
           <span className="flex items-center gap-1">
             <kbd className="inline-flex items-center justify-center w-4 h-4 text-[9px] bg-bg-inset rounded-[3px]">↑</kbd>
             <kbd className="inline-flex items-center justify-center w-4 h-4 text-[9px] bg-bg-inset rounded-[3px]">↓</kbd>

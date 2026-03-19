@@ -51,11 +51,11 @@ export function TopBar() {
 
         {selectedPage && (
           <div className="flex items-center gap-1 ml-1 min-w-0">
-            {selectedPage.parentId && <Breadcrumb pageId={selectedPage.id} />}
+            {selectedPage.parentId && <span className="hidden sm:contents"><Breadcrumb pageId={selectedPage.id} /></span>}
             {selectedPage.icon && (
               <span className="text-[14px]">{selectedPage.icon}</span>
             )}
-            <span className="text-[13px] text-text-secondary truncate max-w-[120px] sm:max-w-[200px]">
+            <span className="text-[13px] text-text-secondary truncate max-w-[100px] sm:max-w-[200px] md:max-w-[300px]">
               {selectedPage.title || 'Untitled'}
             </span>
           </div>
