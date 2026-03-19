@@ -94,7 +94,7 @@ export function IconPicker({ currentIcon, onSelect }: IconPickerProps) {
 
       {/* Picker dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 z-40 mt-1 w-[280px] bg-bg-overlay border border-separator rounded-[var(--radius-lg)] shadow-lg animate-[scaleIn_0.1s_ease] overflow-hidden">
+        <div className="absolute top-full left-0 z-40 mt-1 w-[280px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-separator rounded-[var(--radius-lg)] shadow-lg animate-[scaleIn_0.1s_ease] overflow-hidden">
           {/* Search */}
           <div className="flex items-center gap-2 px-3 py-2 border-b border-separator">
             <input
@@ -132,13 +132,13 @@ export function IconPicker({ currentIcon, onSelect }: IconPickerProps) {
                   <div className="text-[10px] font-medium text-text-muted uppercase tracking-wider px-1 mb-1">
                     {section.label}
                   </div>
-                  <div className="grid grid-cols-8 gap-0.5">
+                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-0.5">
                     {filtered.map((emoji) => (
                       <button
                         key={emoji}
                         onClick={() => handleSelect(emoji)}
                         className={`
-                          flex items-center justify-center w-8 h-8 text-[18px] rounded-[var(--radius-sm)] hover:bg-bg-hover transition-theme
+                          flex items-center justify-center w-10 h-10 sm:w-8 sm:h-8 text-[18px] rounded-[var(--radius-sm)] hover:bg-bg-hover transition-theme
                           ${currentIcon === emoji ? 'bg-accent/20 ring-1 ring-accent' : ''}
                         `}
                       >

@@ -25,6 +25,10 @@ import { Tooltip } from '../ui/Tooltip'
 
 interface CommandBarProps {
   className?: string
+  onUndo?: () => void
+  onRedo?: () => void
+  canUndo?: boolean
+  canRedo?: boolean
 }
 
 interface ToolbarAction {
@@ -33,20 +37,20 @@ interface ToolbarAction {
   shortcut?: string
   action: () => void
   active?: boolean
+  disabled?: boolean
 }
 
-export function CommandBar({ className = '' }: CommandBarProps) {
-  // Phase 6 will wire these to the block editor
+export function CommandBar({ className = '', onUndo, onRedo, canUndo, canRedo }: CommandBarProps) {
   const noop = () => {}
 
   const undoRedo: ToolbarAction[] = [
-    { icon: <Undo2 />, label: 'Undo', shortcut: '⌘Z', action: noop },
-    { icon: <Redo2 />, label: 'Redo', shortcut: '⇧⌘Z', action: noop },
+    { icon: <Undo2 />, label: 'Undo', shortcut: '⌘Z', action: onUndo ?? noop, disabled: onUndo ? !canUndo : false },
+    { icon: <Redo2 />, label: 'Redo', shortcut: '⇧⌘Z', action: onRedo ?? noop, disabled: onRedo ? !canRedo : false },
   ]
 
   const insertActions: ToolbarAction[] = [
     { icon: <Plus />, label: 'Add block', action: noop },
-    { icon: <Link />, label: 'Insert link', shortcut: '⌘K', action: noop },
+    { icon: <Link />, label: 'Insert link', action: noop },
     { icon: <Tag />, label: 'Add tag', action: noop },
     { icon: <Paperclip />, label: 'Attach file', action: noop },
   ]
@@ -81,6 +85,7 @@ export function CommandBar({ className = '' }: CommandBarProps) {
           label={a.label}
           active={a.active}
           onClick={a.action}
+          disabled={a.disabled}
         >
           {a.icon}
         </IconButton>
@@ -101,10 +106,14 @@ export function CommandBar({ className = '' }: CommandBarProps) {
       {renderGroup(insertActions)}
       <Separator orientation="vertical" className="mx-1 h-5" />
       {renderGroup(blockTypes)}
-      <Separator orientation="vertical" className="mx-1 h-5" />
-      {renderGroup(formatting)}
-      <Separator orientation="vertical" className="mx-1 h-5" />
-      {renderGroup(extras)}
+      <Separator orientation="vertical" className="mx-1 h-5 hidden sm:block" />
+      <span className="hidden sm:flex items-center gap-0.5">
+        {renderGroup(formatting)}
+      </span>
+      <Separator orientation="vertical" className="mx-1 h-5 hidden sm:block" />
+      <span className="hidden sm:flex items-center gap-0.5">
+        {renderGroup(extras)}
+      </span>
     </div>
   )
 }

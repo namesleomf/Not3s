@@ -45,8 +45,8 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
     }
 
     const { rect } = selection
-    const toolbarWidth = 280
-    const toolbarHeight = 36
+    const toolbarWidth = toolbarRef.current?.offsetWidth ?? 280
+    const toolbarHeight = toolbarRef.current?.offsetHeight ?? 36
 
     let left = rect.left + rect.width / 2 - toolbarWidth / 2
     const top = rect.top - toolbarHeight - 8
@@ -77,10 +77,12 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
       const textNode = document.createTextNode(text)
       parent.replaceWith(textNode)
     } else {
-      // Wrap in <code>
+      // Wrap in <code> — use extractContents to avoid surroundContents crash on partial nodes
       const code = document.createElement('code')
       code.className = 'bg-bg-code px-1 py-0.5 rounded text-[0.9em] font-mono'
-      range.surroundContents(code)
+      const fragment = range.extractContents()
+      code.appendChild(fragment)
+      range.insertNode(code)
     }
   }, [])
 
@@ -112,7 +114,9 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
     mark.style.backgroundColor = color
     mark.style.borderRadius = '2px'
     mark.style.padding = '0 2px'
-    range.surroundContents(mark)
+    const fragment = range.extractContents()
+    mark.appendChild(fragment)
+    range.insertNode(mark)
     setShowHighlightPicker(false)
   }, [])
 
@@ -164,7 +168,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
       {/* Link */}
       <button
         onClick={execLink}
-        title="Link (Ctrl+K)"
+        title="Link"
         className="flex items-center justify-center w-7 h-7 rounded-[var(--radius-sm)] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-theme"
       >
         <Link className="w-3.5 h-3.5" />

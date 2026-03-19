@@ -11,6 +11,12 @@ export function BlockEditor() {
   const selection = useTextSelection(containerRef)
   const drag = useBlockDrag()
 
+  // Stable refs to avoid listener churn
+  const undoRef = useRef(editor.undo)
+  const redoRef = useRef(editor.redo)
+  undoRef.current = editor.undo
+  redoRef.current = editor.redo
+
   // Focus first block on mount if none focused
   useEffect(() => {
     if (!editor.focusedBlockId && editor.blocks.length > 0) {
@@ -23,16 +29,16 @@ export function BlockEditor() {
     const handleKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
         e.preventDefault()
-        editor.undo()
+        undoRef.current()
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) {
         e.preventDefault()
-        editor.redo()
+        redoRef.current()
       }
     }
     document.addEventListener('keydown', handleKey)
     return () => document.removeEventListener('keydown', handleKey)
-  }, [editor])
+  }, [])
 
   if (editor.blocks.length === 0) return null
 
@@ -59,3 +65,6 @@ export function BlockEditor() {
     </div>
   )
 }
+
+// Export a wrapper to get editor API for CommandBar
+export { useBlockEditor }

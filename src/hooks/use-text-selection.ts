@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export interface TextSelection {
   isActive: boolean
@@ -12,6 +12,7 @@ export function useTextSelection(containerRef: React.RefObject<HTMLElement | nul
     rect: null,
     text: '',
   })
+  const isActiveRef = useRef(false)
 
   const handleSelectionChange = useCallback(() => {
     const sel = window.getSelection()
@@ -21,7 +22,8 @@ export function useTextSelection(containerRef: React.RefObject<HTMLElement | nul
       !sel.rangeCount ||
       !containerRef.current
     ) {
-      if (selection.isActive) {
+      if (isActiveRef.current) {
+        isActiveRef.current = false
         setSelection({ isActive: false, rect: null, text: '' })
       }
       return
@@ -31,7 +33,8 @@ export function useTextSelection(containerRef: React.RefObject<HTMLElement | nul
 
     // Only track selections inside our container
     if (!containerRef.current.contains(range.commonAncestorContainer)) {
-      if (selection.isActive) {
+      if (isActiveRef.current) {
+        isActiveRef.current = false
         setSelection({ isActive: false, rect: null, text: '' })
       }
       return
@@ -39,13 +42,15 @@ export function useTextSelection(containerRef: React.RefObject<HTMLElement | nul
 
     const text = sel.toString().trim()
     if (!text) {
+      isActiveRef.current = false
       setSelection({ isActive: false, rect: null, text: '' })
       return
     }
 
     const rect = range.getBoundingClientRect()
+    isActiveRef.current = true
     setSelection({ isActive: true, rect, text })
-  }, [containerRef, selection.isActive])
+  }, [containerRef])
 
   useEffect(() => {
     document.addEventListener('selectionchange', handleSelectionChange)

@@ -86,13 +86,13 @@ export function TagManager() {
               setShowSuggestions(true)
             }}
             onKeyDown={handleKeyDown}
-            onBlur={() => {
-              // Small delay to allow clicking suggestions
-              setTimeout(() => {
-                setIsAdding(false)
-                setInputValue('')
-                setShowSuggestions(false)
-              }, 150)
+            onBlur={(e) => {
+              // If focus moved to a suggestion button (within the same container), don't close
+              const relatedTarget = e.relatedTarget as HTMLElement | null
+              if (relatedTarget && e.currentTarget.parentElement?.contains(relatedTarget)) return
+              setIsAdding(false)
+              setInputValue('')
+              setShowSuggestions(false)
             }}
             onFocus={() => setShowSuggestions(true)}
             placeholder="Tag name..."

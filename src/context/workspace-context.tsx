@@ -228,6 +228,22 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     }
   }, [state, scheduleSave])
 
+  // Flush pending saves before tab close to prevent data loss
+  useEffect(() => {
+    const flushSave = () => {
+      if (saveTimer.current) {
+        clearTimeout(saveTimer.current)
+        saveTimer.current = null
+      }
+      const s = stateRef.current
+      storage.savePages(s.pages)
+      storage.saveSettings(s.settings)
+      storage.saveUIState(s.ui)
+    }
+    window.addEventListener('beforeunload', flushSave)
+    return () => window.removeEventListener('beforeunload', flushSave)
+  }, [])
+
   return (
     <WorkspaceContext.Provider value={{ state, dispatch }}>
       {children}

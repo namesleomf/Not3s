@@ -277,7 +277,7 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
 
 function BlockHandle({ onAdd, onDragStart }: { onAdd: () => void; onDragStart?: (e: React.DragEvent) => void }) {
   return (
-    <div className="flex items-center gap-0.5 mr-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+    <div className="flex items-center gap-0.5 mr-1 mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex-shrink-0">
       <button
         onClick={onAdd}
         className="flex items-center justify-center w-5 h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover hover:text-text-primary transition-theme"
@@ -389,7 +389,7 @@ function SlashCommandMenu({
   }, [onClose])
 
   return (
-    <div className="absolute left-12 top-full z-30 mt-1 w-[220px] bg-bg-overlay border border-separator rounded-[var(--radius-lg)] shadow-lg py-1 max-h-[320px] overflow-y-auto animate-[fadeIn_0.1s_ease]">
+    <div className="absolute left-0 sm:left-12 top-full z-30 mt-1 w-[220px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-separator rounded-[var(--radius-lg)] shadow-lg py-1 max-h-[320px] overflow-y-auto animate-[fadeIn_0.1s_ease]">
       <div className="px-3 py-1.5">
         <span className="text-[11px] font-medium text-text-muted uppercase tracking-wider">
           Basic blocks

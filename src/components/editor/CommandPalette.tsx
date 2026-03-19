@@ -76,7 +76,7 @@ export function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[5vh] sm:pt-[15vh]"
       onClick={() => dispatch({ type: 'UI_TOGGLE_COMMAND_MENU' })}
     >
       {/* Backdrop */}
@@ -84,7 +84,9 @@ export function CommandPalette() {
 
       {/* Palette */}
       <div
-        className="relative w-full max-w-[520px] bg-bg-overlay border border-separator rounded-[var(--radius-xl)] shadow-2xl overflow-hidden animate-[scaleIn_0.15s_ease]"
+        role="dialog"
+        aria-modal="true"
+        className="relative w-full max-w-[520px] mx-4 bg-bg-overlay border border-separator rounded-[var(--radius-xl)] shadow-2xl overflow-hidden animate-[scaleIn_0.15s_ease]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search input */}
@@ -102,7 +104,7 @@ export function CommandPalette() {
         </div>
 
         {/* Results */}
-        <div className="max-h-[320px] overflow-y-auto py-1">
+        <div className="max-h-[60vh] sm:max-h-[320px] overflow-y-auto py-1">
           {results.length === 0 ? (
             <div className="px-4 py-6 text-center text-[13px] text-text-muted">
               No pages found

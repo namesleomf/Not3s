@@ -32,7 +32,7 @@ export function PageHeader() {
   }
 
   return (
-    <div className="group px-12 pt-10 pb-2 max-w-[720px] mx-auto w-full">
+    <div className="group px-4 sm:px-8 md:px-12 pt-6 sm:pt-10 pb-2 max-w-[720px] mx-auto w-full">
       {/* Page icon */}
       <div className="mb-3">
         <IconPicker
@@ -50,7 +50,7 @@ export function PageHeader() {
         onKeyDown={handleKeyDown}
         data-placeholder="Untitled"
         className="
-          text-[32px] font-bold leading-tight text-text-primary
+          text-[24px] sm:text-[28px] md:text-[32px] font-bold leading-tight text-text-primary
           outline-none border-none
           empty:before:content-[attr(data-placeholder)]
           empty:before:text-text-placeholder

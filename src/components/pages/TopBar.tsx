@@ -51,7 +51,7 @@ export function TopBar() {
             {selectedPage.icon && (
               <span className="text-[14px]">{selectedPage.icon}</span>
             )}
-            <span className="text-[13px] text-text-secondary truncate max-w-[200px]">
+            <span className="text-[13px] text-text-secondary truncate max-w-[120px] sm:max-w-[200px]">
               {selectedPage.title || 'Untitled'}
             </span>
           </div>
