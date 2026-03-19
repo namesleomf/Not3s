@@ -94,28 +94,32 @@ export function CommandBar({ className = '', onUndo, onRedo, canUndo, canRedo }:
 
   return (
     <div className={`flex items-center justify-center py-2 px-4 flex-shrink-0 ${className}`}>
-      <div
-        className="
-          inline-flex items-center gap-0.5 px-2 h-11
-          bg-bg-page border border-border
-          rounded-[var(--radius-pill)]
-          shadow-float
-          overflow-x-auto scrollbar-none
-        "
-      >
-        {renderGroup(undoRedo)}
-        <Separator orientation="vertical" className="mx-1.5 h-5" />
-        {renderGroup(insertActions)}
-        <Separator orientation="vertical" className="mx-1.5 h-5" />
-        {renderGroup(blockTypes)}
-        <Separator orientation="vertical" className="mx-1.5 h-5 hidden sm:block" />
-        <span className="hidden sm:flex items-center gap-0.5">
-          {renderGroup(formatting)}
-        </span>
-        <Separator orientation="vertical" className="mx-1.5 h-5 hidden sm:block" />
-        <span className="hidden sm:flex items-center gap-0.5">
-          {renderGroup(extras)}
-        </span>
+      <div className="relative max-w-full">
+        <div
+          className="
+            inline-flex items-center gap-0.5 px-2 h-11
+            bg-bg-page border border-border
+            rounded-[var(--radius-pill)]
+            shadow-float
+            overflow-x-auto scrollbar-none
+          "
+        >
+          {renderGroup(undoRedo)}
+          <Separator orientation="vertical" className="mx-1.5 h-5" />
+          {renderGroup(insertActions)}
+          <Separator orientation="vertical" className="mx-1.5 h-5" />
+          {renderGroup(blockTypes)}
+          <Separator orientation="vertical" className="mx-1.5 h-5 hidden sm:block" />
+          <span className="hidden sm:flex items-center gap-0.5">
+            {renderGroup(formatting)}
+          </span>
+          <Separator orientation="vertical" className="mx-1.5 h-5 hidden sm:block" />
+          <span className="hidden sm:flex items-center gap-0.5">
+            {renderGroup(extras)}
+          </span>
+        </div>
+        {/* Right fade hint for horizontal scroll on mobile */}
+        <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none rounded-r-[var(--radius-pill)] bg-gradient-to-l from-bg-page to-transparent sm:hidden" />
       </div>
     </div>
   )
