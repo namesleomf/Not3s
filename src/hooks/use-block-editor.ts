@@ -1,5 +1,6 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { usePages } from './use-pages'
+import { useUndoRedo } from './use-undo-redo'
 import { createBlock } from '../lib/page-utils'
 import type { Block, BlockType } from '../types'
 
@@ -12,6 +13,10 @@ export interface BlockEditorAPI {
   moveBlock: (id: string, direction: 'up' | 'down') => void
   reorderBlock: (fromId: string, toId: string, position: 'before' | 'after') => void
   duplicateBlock: (id: string) => void
+  undo: () => void
+  redo: () => void
+  canUndo: boolean
+  canRedo: boolean
   focusedBlockId: string | null
   setFocusedBlockId: (id: string | null) => void
   blockRefs: React.MutableRefObject<Map<string, HTMLElement>>
@@ -21,18 +26,42 @@ export function useBlockEditor(): BlockEditorAPI {
   const { selectedPage, update } = usePages()
   const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null)
   const blockRefs = useRef<Map<string, HTMLElement>>(new Map())
+  const history = useUndoRedo()
 
   const blocks = selectedPage?.blocks ?? []
+
+  // Push initial state when page changes
+  const lastPageId = useRef<string | null>(null)
+  useEffect(() => {
+    if (selectedPage && selectedPage.id !== lastPageId.current) {
+      lastPageId.current = selectedPage.id
+      history.push(selectedPage.blocks)
+    }
+  }, [selectedPage?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const setBlocks = useCallback(
     (newBlocks: Block[]) => {
       if (!selectedPage) return
-      update(selectedPage.id, {
-        blocks: newBlocks.map((b, i) => ({ ...b, order: i })),
-      })
+      const ordered = newBlocks.map((b, i) => ({ ...b, order: i }))
+      update(selectedPage.id, { blocks: ordered })
+      history.push(ordered)
     },
-    [selectedPage, update],
+    [selectedPage, update, history],
   )
+
+  const undoAction = useCallback(() => {
+    const prev = history.undo()
+    if (prev && selectedPage) {
+      update(selectedPage.id, { blocks: prev })
+    }
+  }, [history, selectedPage, update])
+
+  const redoAction = useCallback(() => {
+    const next = history.redo()
+    if (next && selectedPage) {
+      update(selectedPage.id, { blocks: next })
+    }
+  }, [history, selectedPage, update])
 
   const addBlock = useCallback(
     (type: BlockType = 'paragraph', afterId?: string) => {
@@ -137,6 +166,10 @@ export function useBlockEditor(): BlockEditorAPI {
     moveBlock,
     reorderBlock,
     duplicateBlock,
+    undo: undoAction,
+    redo: redoAction,
+    canUndo: history.canUndo,
+    canRedo: history.canRedo,
     focusedBlockId,
     setFocusedBlockId,
     blockRefs,

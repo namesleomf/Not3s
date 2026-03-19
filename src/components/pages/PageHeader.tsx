@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { usePages } from '../../hooks/use-pages'
 import { IconPicker } from './IconPicker'
+import { TagManager } from './TagManager'
 
 export function PageHeader() {
   const { selectedPage, rename, update } = usePages()
@@ -57,11 +58,13 @@ export function PageHeader() {
         "
       />
 
-      {/* Metadata row */}
-      <div className="flex items-center gap-3 mt-3 text-[12px] text-text-muted">
-        {selectedPage.tags.length > 0 && (
-          <span>{selectedPage.tags.join(', ')}</span>
-        )}
+      {/* Tags */}
+      <div className="mt-3">
+        <TagManager />
+      </div>
+
+      {/* Date metadata */}
+      <div className="flex items-center gap-3 mt-2 text-[12px] text-text-muted">
         {selectedPage.createdAt && (
           <span>
             {new Date(selectedPage.updatedAt).toLocaleDateString(undefined, {

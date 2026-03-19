@@ -18,6 +18,22 @@ export function BlockEditor() {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Undo/Redo keyboard shortcuts (Ctrl+Z / Ctrl+Shift+Z)
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault()
+        editor.undo()
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) {
+        e.preventDefault()
+        editor.redo()
+      }
+    }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [editor])
+
   if (editor.blocks.length === 0) return null
 
   return (
