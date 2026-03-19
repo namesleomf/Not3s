@@ -9,10 +9,10 @@ export function QuickCreateButton() {
       onClick={() => create()}
       className="
         w-full flex items-center gap-2.5 h-9 px-3
-        text-[13px] font-medium text-text-secondary
+        text-[13px] font-medium text-accent
         rounded-[var(--radius-lg)] transition-theme
-        hover:bg-bg-hover hover:text-text-primary
-        active:bg-bg-active
+        bg-accent/[0.06] hover:bg-accent/[0.1]
+        active:bg-accent/[0.14]
       "
     >
       <Plus className="w-4 h-4" />

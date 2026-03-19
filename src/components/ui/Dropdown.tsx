@@ -37,7 +37,7 @@ export function Dropdown({ trigger, children, align = 'left', className = '' }: 
           className={`
             absolute z-50 top-full mt-1
             min-w-[200px] py-1.5
-            bg-bg-overlay border border-border
+            bg-bg-overlay border border-border/40
             rounded-[var(--radius-lg)]
             shadow-float
             animate-[fadeIn_0.1s_ease,scaleIn_0.1s_ease]

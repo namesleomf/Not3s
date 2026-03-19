@@ -140,7 +140,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
   return (
     <div
       ref={toolbarRef}
-      className="fixed z-50 flex items-center gap-0.5 px-1.5 py-1 bg-bg-overlay border border-border rounded-[var(--radius-pill)] shadow-float animate-[fadeIn_0.1s_ease]"
+      className="fixed z-50 flex items-center gap-0.5 px-1.5 py-1 bg-bg-overlay border border-border/40 rounded-[var(--radius-pill)] shadow-float animate-[fadeIn_0.1s_ease]"
       style={{ top: position.top, left: position.left }}
       onMouseDown={(e) => e.preventDefault()} // Prevent losing selection
     >
@@ -197,7 +197,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
 
         {showHighlightPicker && (
           <div
-            className="absolute top-full mt-1.5 right-0 flex items-center gap-1.5 p-2 bg-bg-overlay border border-border rounded-[var(--radius-pill)] shadow-float"
+            className="absolute top-full mt-1.5 right-0 flex items-center gap-1.5 p-2 bg-bg-overlay border border-border/40 rounded-[var(--radius-pill)] shadow-float"
             onMouseDown={(e) => e.preventDefault()}
           >
             {highlightColors.map(({ color, label }) => (

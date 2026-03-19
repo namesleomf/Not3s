@@ -1,5 +1,95 @@
 import type { Block, Page } from '../types'
 
+// ---- Minimal ZIP builder (no external deps) ----
+
+function crc32(data: Uint8Array): number {
+  let crc = 0xffffffff
+  for (let i = 0; i < data.length; i++) {
+    crc ^= data[i]
+    for (let j = 0; j < 8; j++) {
+      crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0)
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0
+}
+
+function buildZip(files: { name: string; content: string }[]): Blob {
+  const encoder = new TextEncoder()
+  const entries: { name: Uint8Array; data: Uint8Array; crc: number; offset: number }[] = []
+  const parts: Uint8Array[] = []
+  let offset = 0
+
+  for (const file of files) {
+    const nameBytes = encoder.encode(file.name)
+    const dataBytes = encoder.encode(file.content)
+    const crc = crc32(dataBytes)
+
+    // Local file header (30 + nameLen + dataLen)
+    const header = new ArrayBuffer(30 + nameBytes.length)
+    const hv = new DataView(header)
+    hv.setUint32(0, 0x04034b50, true)    // signature
+    hv.setUint16(4, 20, true)             // version needed
+    hv.setUint16(6, 0, true)              // flags
+    hv.setUint16(8, 0, true)              // compression (store)
+    hv.setUint16(10, 0, true)             // mod time
+    hv.setUint16(12, 0, true)             // mod date
+    hv.setUint32(14, crc, true)           // crc32
+    hv.setUint32(18, dataBytes.length, true) // compressed size
+    hv.setUint32(22, dataBytes.length, true) // uncompressed size
+    hv.setUint16(26, nameBytes.length, true) // name length
+    hv.setUint16(28, 0, true)             // extra field length
+    new Uint8Array(header).set(nameBytes, 30)
+
+    const headerArr = new Uint8Array(header)
+    parts.push(headerArr, dataBytes)
+    entries.push({ name: nameBytes, data: dataBytes, crc, offset })
+    offset += headerArr.length + dataBytes.length
+  }
+
+  // Central directory
+  const cdStart = offset
+  for (const entry of entries) {
+    const cd = new ArrayBuffer(46 + entry.name.length)
+    const cv = new DataView(cd)
+    cv.setUint32(0, 0x02014b50, true)     // signature
+    cv.setUint16(4, 20, true)              // version made by
+    cv.setUint16(6, 20, true)              // version needed
+    cv.setUint16(8, 0, true)              // flags
+    cv.setUint16(10, 0, true)             // compression
+    cv.setUint16(12, 0, true)             // mod time
+    cv.setUint16(14, 0, true)             // mod date
+    cv.setUint32(16, entry.crc, true)     // crc32
+    cv.setUint32(20, entry.data.length, true) // compressed
+    cv.setUint32(24, entry.data.length, true) // uncompressed
+    cv.setUint16(28, entry.name.length, true) // name length
+    cv.setUint16(30, 0, true)             // extra length
+    cv.setUint16(32, 0, true)             // comment length
+    cv.setUint16(34, 0, true)             // disk start
+    cv.setUint16(36, 0, true)             // internal attrs
+    cv.setUint32(38, 0, true)             // external attrs
+    cv.setUint32(42, entry.offset, true)  // local header offset
+    new Uint8Array(cd).set(entry.name, 46)
+    const cdArr = new Uint8Array(cd)
+    parts.push(cdArr)
+    offset += cdArr.length
+  }
+
+  // End of central directory
+  const eocd = new ArrayBuffer(22)
+  const ev = new DataView(eocd)
+  ev.setUint32(0, 0x06054b50, true)      // signature
+  ev.setUint16(4, 0, true)               // disk number
+  ev.setUint16(6, 0, true)               // cd disk
+  ev.setUint16(8, entries.length, true)   // entries on disk
+  ev.setUint16(10, entries.length, true)  // total entries
+  ev.setUint32(12, offset - cdStart, true) // cd size
+  ev.setUint32(16, cdStart, true)         // cd offset
+  ev.setUint16(20, 0, true)              // comment length
+  parts.push(new Uint8Array(eocd))
+
+  return new Blob(parts as BlobPart[], { type: 'application/zip' })
+}
+
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '')
 }
@@ -181,4 +271,24 @@ export function exportPageAsHTML(page: Page) {
   const html = pageToHTML(page)
   const filename = `${page.title || 'Untitled'}.html`
   downloadFile(html, filename, 'text/html')
+}
+
+export function exportWorkspace(pages: Record<string, Page>) {
+  const activePages = Object.values(pages).filter((p) => !p.isTrashed)
+  if (activePages.length === 0) return
+
+  const files = activePages.map((page) => {
+    const safeName = (page.title || 'Untitled').replace(/[/\\?%*:|"<>]/g, '-')
+    return { name: `${safeName}.md`, content: pageToMarkdown(page) }
+  })
+
+  const blob = buildZip(files)
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'Not3s-workspace.zip'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }

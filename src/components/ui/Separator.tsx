@@ -9,7 +9,7 @@ export function Separator({ className = '', orientation = 'horizontal' }: Separa
       <div
         role="separator"
         aria-orientation="vertical"
-        className={`w-px self-stretch bg-separator ${className}`}
+        className={`w-px self-stretch bg-separator opacity-60 ${className}`}
       />
     )
   }
@@ -18,7 +18,7 @@ export function Separator({ className = '', orientation = 'horizontal' }: Separa
     <div
       role="separator"
       aria-orientation="horizontal"
-      className={`h-px w-full bg-separator ${className}`}
+      className={`h-px w-full bg-separator opacity-60 ${className}`}
     />
   )
 }

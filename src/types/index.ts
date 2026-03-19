@@ -76,6 +76,7 @@ export interface UIState {
   settingsOpen: boolean
   commandMenuOpen: boolean
   importDialogOpen: boolean
+  outlineOpen: boolean
   expandedPageIds: string[] // which page tree nodes are expanded
 }
 

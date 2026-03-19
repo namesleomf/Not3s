@@ -20,7 +20,7 @@ export function SidebarHeader() {
   return (
     <div className="flex items-center justify-between h-14 px-4 flex-shrink-0">
       <div className="flex items-center gap-2.5 min-w-0">
-        <div className="w-7 h-7 rounded-[var(--radius-md)] bg-text-primary flex items-center justify-center flex-shrink-0">
+        <div className="w-7 h-7 rounded-[var(--radius-md)] bg-accent flex items-center justify-center flex-shrink-0">
           <span className="text-[12px] font-bold text-text-inverse">N</span>
         </div>
         <span className="text-[14px] font-semibold text-text-primary truncate tracking-tight">

@@ -30,12 +30,22 @@ import {
   Heart,
   Clock,
 } from 'lucide-react'
+import type { Page } from '../types'
 import type { Command } from '../lib/command-registry'
 import { usePages } from './use-pages'
 import { useSettings } from './use-settings'
 import { useWorkspace } from '../context/workspace-context'
 import { useEditorContext } from '../context/editor-context'
-import { exportPageAsMarkdown, exportPageAsHTML } from '../lib/export'
+import { exportPageAsMarkdown, exportPageAsHTML, exportWorkspace } from '../lib/export'
+
+function getPageSnippet(page: Page): string | undefined {
+  for (const block of page.blocks) {
+    if (block.type === 'divider' || block.type === 'image') continue
+    const text = block.content.replace(/<[^>]*>/g, '').trim()
+    if (text) return text.length > 60 ? text.slice(0, 60) + '…' : text
+  }
+  return undefined
+}
 
 export function useCommands(): Command[] {
   const { pages, selectedPage, create, duplicate, trash, restore, togglePin, toggleFavorite, toggleArchive, select } = usePages()
@@ -258,6 +268,16 @@ export function useCommands(): Command[] {
     })
 
     cmds.push({
+      id: 'settings-export-workspace',
+      group: 'settings',
+      title: 'Export workspace',
+      subtitle: 'Download all pages as ZIP',
+      keywords: ['export', 'workspace', 'zip', 'backup', 'download', 'all'],
+      icon: <FileDown className="w-4 h-4" />,
+      run: () => { exportWorkspace(pages); close() },
+    })
+
+    cmds.push({
       id: 'settings-import',
       group: 'settings',
       title: 'Import file',
@@ -305,7 +325,7 @@ export function useCommands(): Command[] {
         id: `page-open-${page.id}`,
         group: 'pages',
         title: page.title || 'Untitled',
-        subtitle: page.tags.length > 0 ? page.tags.join(', ') : undefined,
+        subtitle: page.tags.length > 0 ? page.tags.join(', ') : getPageSnippet(page),
         keywords: [page.title.toLowerCase(), ...page.tags.map((t) => t.toLowerCase())],
         icon: page.icon ? <span className="text-[14px] leading-none">{page.icon}</span> : <FileText className="w-4 h-4" />,
         run: () => { select(page.id); close() },

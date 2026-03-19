@@ -17,6 +17,9 @@ import { usePages } from './hooks/use-pages'
 import { useSearch } from './hooks/use-search'
 import { useKeyboardShortcuts } from './hooks/use-keyboard-shortcuts'
 import { useBlockEditor } from './hooks/use-block-editor'
+import { BacklinksPanel } from './components/editor/BacklinksPanel'
+import { PageOutline } from './components/editor/PageOutline'
+import { ErrorBoundary } from './components/ui/ErrorBoundary'
 
 function EditorView() {
   const editor = useBlockEditor()
@@ -24,11 +27,17 @@ function EditorView() {
   return (
     <EditorProvider value={editor}>
       <CommandBar />
-      <div className="flex-1 overflow-y-auto bg-bg-page">
-        <PageHeader />
-        <div className="px-4 sm:px-8 md:px-12 pb-32 max-w-[720px] mx-auto w-full">
-          <BlockEditor />
+      <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 overflow-y-auto bg-bg-page">
+          <PageHeader />
+          <div className="px-4 sm:px-8 md:px-12 pb-32 max-w-[720px] mx-auto w-full">
+            <ErrorBoundary fallbackMessage="Editor encountered an error">
+              <BlockEditor />
+            </ErrorBoundary>
+            <BacklinksPanel />
+          </div>
         </div>
+        <PageOutline />
       </div>
     </EditorProvider>
   )
@@ -82,9 +91,11 @@ export default function App() {
   return (
     <WorkspaceProvider>
       <ThemeProvider>
-        <AppShell>
-          <MainContent />
-        </AppShell>
+        <ErrorBoundary>
+          <AppShell>
+            <MainContent />
+          </AppShell>
+        </ErrorBoundary>
         <SettingsPanel />
         <CommandPalette />
       </ThemeProvider>

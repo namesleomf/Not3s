@@ -30,6 +30,7 @@ export const DEFAULT_UI_STATE: UIState = {
   settingsOpen: false,
   commandMenuOpen: false,
   importDialogOpen: false,
+  outlineOpen: false,
   expandedPageIds: [],
 }
 

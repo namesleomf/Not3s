@@ -6,6 +6,7 @@ import {
   Square,
   ChevronRight,
   AlertCircle,
+  MoreVertical,
   Type,
   Heading1,
   Heading2,
@@ -291,8 +292,8 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
   // Divider blocks are non-editable
   if (block.type === 'divider') {
     return (
-      <div className={`group relative flex items-center py-2 px-1 ${dropIndicatorClass} ${isDragged ? 'opacity-30' : ''}`} {...dragProps}>
-        <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
+      <div data-block-id={block.id} className={`group relative flex items-center py-2 px-1 ${dropIndicatorClass} ${isDragged ? 'opacity-30' : ''}`} {...dragProps}>
+        <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} blockType={block.type} onTurnInto={(type) => editor.transformBlock(block.id, type)} />
         <hr className="flex-1 border-separator" />
       </div>
     )
@@ -303,9 +304,9 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
     const src = block.metadata.src as string | undefined
     const alt = (block.metadata.alt as string) || ''
     return (
-      <div className={`group relative flex flex-col py-1 px-1 ${dropIndicatorClass} ${isDragged ? 'opacity-30' : ''}`} {...dragProps}>
+      <div data-block-id={block.id} className={`group relative flex flex-col py-1 px-1 ${dropIndicatorClass} ${isDragged ? 'opacity-30' : ''}`} {...dragProps}>
         <div className="flex items-start">
-          <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
+          <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} blockType={block.type} onTurnInto={(type) => editor.transformBlock(block.id, type)} />
           <div className="flex-1">
             {src ? (
               <img
@@ -333,12 +334,12 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
   const isQuote = block.type === 'quote'
 
   return (
-    <div className={isDragged ? 'opacity-30' : ''}>
+    <div data-block-id={block.id} className={isDragged ? 'opacity-30' : ''}>
       <div
         className={`group relative flex items-start py-0.5 px-1 ${dropIndicatorClass} ${isCallout ? 'bg-warning/10 border border-warning/15 rounded-[var(--radius-lg)] p-3 my-1' : ''} ${isQuote ? 'bg-accent/[0.03] rounded-[var(--radius-md)] py-2 px-2 my-0.5' : ''}`}
         {...dragProps}
       >
-        <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
+        <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} blockType={block.type} onTurnInto={(type) => editor.transformBlock(block.id, type)} />
 
         {/* Block-type prefix */}
         <BlockPrefix block={block} editor={editor} />
@@ -404,7 +405,39 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
 
 // --- Sub-components ---
 
-function BlockHandle({ onAdd, onDragStart }: { onAdd: () => void; onDragStart?: (e: React.DragEvent) => void }) {
+const turnIntoOptions: { type: BlockType; label: string; icon: React.ReactNode }[] = [
+  { type: 'paragraph', label: 'Text', icon: <Type className="w-3.5 h-3.5" /> },
+  { type: 'heading1', label: 'Heading 1', icon: <Heading1 className="w-3.5 h-3.5" /> },
+  { type: 'heading2', label: 'Heading 2', icon: <Heading2 className="w-3.5 h-3.5" /> },
+  { type: 'heading3', label: 'Heading 3', icon: <Heading3 className="w-3.5 h-3.5" /> },
+  { type: 'bullet-list', label: 'Bullet list', icon: <List className="w-3.5 h-3.5" /> },
+  { type: 'numbered-list', label: 'Numbered list', icon: <ListOrdered className="w-3.5 h-3.5" /> },
+  { type: 'todo', label: 'To-do', icon: <CheckSquare className="w-3.5 h-3.5" /> },
+  { type: 'quote', label: 'Quote', icon: <Quote className="w-3.5 h-3.5" /> },
+  { type: 'callout', label: 'Callout', icon: <AlertCircle className="w-3.5 h-3.5" /> },
+  { type: 'code', label: 'Code', icon: <Code className="w-3.5 h-3.5" /> },
+]
+
+function BlockHandle({ onAdd, onDragStart, blockType, onTurnInto }: {
+  onAdd: () => void
+  onDragStart?: (e: React.DragEvent) => void
+  blockType: BlockType
+  onTurnInto: (type: BlockType) => void
+}) {
+  const [showTurnInto, setShowTurnInto] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!showTurnInto) return
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowTurnInto(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [showTurnInto])
+
   return (
     <div className="flex items-center gap-0.5 mr-1 mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex-shrink-0">
       <button
@@ -414,13 +447,40 @@ function BlockHandle({ onAdd, onDragStart }: { onAdd: () => void; onDragStart?: 
       >
         <Plus className="w-3.5 h-3.5" />
       </button>
-      <span
-        draggable={!!onDragStart}
-        onDragStart={onDragStart}
-        className="flex items-center justify-center w-7 h-7 sm:w-5 sm:h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover cursor-grab active:cursor-grabbing transition-theme"
-      >
-        <GripVertical className="w-3.5 h-3.5" />
-      </span>
+      <div className="relative" ref={menuRef}>
+        <span
+          draggable={!!onDragStart}
+          onDragStart={onDragStart}
+          onClick={() => setShowTurnInto(!showTurnInto)}
+          className="flex items-center justify-center w-7 h-7 sm:w-5 sm:h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover cursor-grab active:cursor-grabbing transition-theme"
+        >
+          <GripVertical className="w-3.5 h-3.5" />
+        </span>
+        {showTurnInto && (
+          <div className="absolute left-0 top-full mt-1 z-50 w-48 py-1 bg-bg-overlay border border-border/40 rounded-[var(--radius-lg)] shadow-float">
+            <div className="px-3 py-1.5 text-[11px] font-semibold text-text-muted uppercase tracking-wider">
+              Turn into
+            </div>
+            {turnIntoOptions.map((opt) => (
+              <button
+                key={opt.type}
+                onClick={() => {
+                  onTurnInto(opt.type)
+                  setShowTurnInto(false)
+                }}
+                className={`flex items-center gap-2.5 w-full px-3 py-1.5 text-[13px] text-left transition-theme rounded-[var(--radius-md)] mx-0 ${
+                  blockType === opt.type
+                    ? 'text-accent bg-accent/10'
+                    : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
+                }`}
+              >
+                <span className="text-text-muted flex-shrink-0">{opt.icon}</span>
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -562,14 +622,14 @@ function SlashCommandMenu({
 
   if (filtered.length === 0) {
     return (
-      <div className="absolute left-0 sm:left-12 top-full z-30 mt-1.5 w-[260px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border rounded-[var(--radius-xl)] shadow-float py-4 animate-[fadeIn_0.1s_ease]">
+      <div className="absolute left-0 sm:left-12 top-full z-30 mt-1.5 w-[260px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border/40 rounded-[var(--radius-xl)] shadow-float py-4 animate-[fadeIn_0.1s_ease]">
         <div className="px-4 text-[13px] text-text-muted text-center">No matching blocks</div>
       </div>
     )
   }
 
   return (
-    <div className="absolute left-0 sm:left-12 top-full z-30 mt-1.5 w-[260px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border rounded-[var(--radius-xl)] shadow-float py-1.5 max-h-[340px] overflow-y-auto animate-[fadeIn_0.1s_ease]">
+    <div className="absolute left-0 sm:left-12 top-full z-30 mt-1.5 w-[260px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border/40 rounded-[var(--radius-xl)] shadow-float py-1.5 max-h-[340px] overflow-y-auto animate-[fadeIn_0.1s_ease]">
       <div className="px-3 py-1.5">
         <span className="text-[11px] font-medium text-text-muted uppercase tracking-wider">
           {filter ? 'Matching blocks' : 'Basic blocks'}
@@ -586,7 +646,7 @@ function SlashCommandMenu({
           `}
           style={{ width: 'calc(100% - 8px)' }}
         >
-          <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-[var(--radius-md)] bg-bg-inset text-text-secondary">
+          <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-[var(--radius-md)] text-text-muted">
             {item.icon}
           </span>
           <div className="flex flex-col">
