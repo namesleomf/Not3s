@@ -55,13 +55,13 @@ function MainContent() {
   return (
     <>
       <TopBar />
-      <CommandBar />
       <div className="flex-1 overflow-y-auto bg-bg-page">
         <PageHeader />
         <div className="px-4 sm:px-8 md:px-12 pb-32 max-w-[720px] mx-auto w-full">
           <BlockEditor />
         </div>
       </div>
+      <CommandBar />
     </>
   )
 }

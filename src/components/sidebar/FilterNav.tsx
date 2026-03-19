@@ -22,7 +22,7 @@ export function FilterNav() {
           className={`
             flex items-center gap-3 h-9 px-3 w-full
             text-[13px] font-medium
-            rounded-[var(--radius-lg)] transition-theme text-left
+            rounded-[var(--radius-sm)] transition-all duration-200 text-left active:scale-[0.98]
             ${activeFilter === f.id
               ? 'bg-bg-selected text-text-primary'
               : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'

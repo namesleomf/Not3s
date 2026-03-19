@@ -130,7 +130,7 @@ export function PageTreeItem({ pageId, depth }: PageTreeItemProps) {
           onClick={() => select(pageId)}
           className={`
             group flex items-center gap-1 w-full h-9 pr-2 text-left
-            text-[13px] rounded-[var(--radius-lg)] transition-theme
+            text-[13px] rounded-[var(--radius-sm)] transition-all duration-200
             ${isSelected
               ? 'bg-bg-selected text-text-primary font-medium'
               : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'

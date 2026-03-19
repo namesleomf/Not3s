@@ -32,9 +32,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={`
           inline-flex items-center justify-center font-medium
-          rounded-[var(--radius-pill)] transition-theme
+          rounded-[var(--radius-pill)] transition-all duration-200
           select-none cursor-pointer whitespace-nowrap
           disabled:opacity-40 disabled:pointer-events-none
+          active:scale-95
           ${variantClasses[variant]}
           ${sizeClasses[size]}
           ${className}

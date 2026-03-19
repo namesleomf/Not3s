@@ -48,9 +48,9 @@ export function PageHeader() {
               inline-flex items-center gap-2 h-8 px-3.5
               text-[13px] text-text-muted font-medium
               bg-transparent border border-border
-              rounded-[var(--radius-pill)]
+              rounded-[var(--radius-md)]
               hover:bg-bg-hover hover:text-text-secondary
-              transition-theme
+              transition-all duration-200 active:scale-95
             "
           >
             <Smile className="w-4 h-4" />
@@ -91,7 +91,7 @@ export function PageHeader() {
         onKeyDown={handleKeyDown}
         data-placeholder="Untitled"
         className="
-          text-[26px] sm:text-[30px] md:text-[34px] font-bold leading-tight text-text-primary
+          text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight text-text-primary
           outline-none border-none tracking-tight
           empty:before:content-[attr(data-placeholder)]
           empty:before:text-text-placeholder

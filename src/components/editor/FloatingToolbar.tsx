@@ -134,7 +134,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
   return (
     <div
       ref={toolbarRef}
-      className="fixed z-50 flex items-center gap-0.5 px-1.5 py-1 bg-bg-overlay border border-border rounded-[var(--radius-pill)] shadow-float animate-[fadeIn_0.1s_ease]"
+      className="fixed z-50 flex items-center gap-0.5 px-1.5 py-1 bg-bg-overlay border border-border rounded-[var(--radius-lg)] shadow-float animate-[fadeIn_0.1s_ease]"
       style={{ top: position.top, left: position.left }}
       onMouseDown={(e) => e.preventDefault()} // Prevent losing selection
     >
@@ -144,7 +144,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
           onClick={() => execFormat(command)}
           title={`${label} (${shortcut})`}
           className={`
-            flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] transition-theme
+            flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 active:scale-95
             ${isActive(command)
               ? 'bg-accent/20 text-accent'
               : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'}
@@ -160,7 +160,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
       <button
         onClick={execCode}
         title="Inline Code"
-        className="flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-theme"
+        className="flex items-center justify-center w-8 h-8 rounded-full text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all duration-200 active:scale-95"
       >
         <Code className="w-3.5 h-3.5" />
       </button>
@@ -169,7 +169,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
       <button
         onClick={execLink}
         title="Link"
-        className="flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-theme"
+        className="flex items-center justify-center w-8 h-8 rounded-full text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all duration-200 active:scale-95"
       >
         <Link className="w-3.5 h-3.5" />
       </button>
@@ -180,7 +180,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
           onClick={() => setShowHighlightPicker(!showHighlightPicker)}
           title="Highlight"
           className={`
-            flex items-center justify-center w-8 h-8 rounded-[var(--radius-md)] transition-theme
+            flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 active:scale-95
             ${showHighlightPicker
               ? 'bg-accent/20 text-accent'
               : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'}
@@ -191,7 +191,7 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
 
         {showHighlightPicker && (
           <div
-            className="absolute top-full mt-1.5 right-0 flex items-center gap-1.5 p-2 bg-bg-overlay border border-border rounded-[var(--radius-pill)] shadow-float"
+            className="absolute top-full mt-1.5 right-0 flex items-center gap-1.5 p-2 bg-bg-overlay border border-border rounded-[var(--radius-lg)] shadow-float"
             onMouseDown={(e) => e.preventDefault()}
           >
             {highlightColors.map(({ color, label }) => (
