@@ -611,6 +611,67 @@ export async function parsePDF(
 // File Dispatcher
 // ============================================================
 
+// ============================================================
+// CSV Parser
+// ============================================================
+
+export function parseCSV(text: string, filename: string): ParsedPage {
+  const blocks: Block[] = []
+  let order = 0
+
+  // Simple CSV parsing: handle quoted fields
+  function parseLine(line: string): string[] {
+    const fields: string[] = []
+    let current = ''
+    let inQuotes = false
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i]
+      if (ch === '"') {
+        if (inQuotes && line[i + 1] === '"') {
+          current += '"'
+          i++
+        } else {
+          inQuotes = !inQuotes
+        }
+      } else if (ch === ',' && !inQuotes) {
+        fields.push(current.trim())
+        current = ''
+      } else {
+        current += ch
+      }
+    }
+    fields.push(current.trim())
+    return fields
+  }
+
+  const lines = text.split(/\r?\n/).filter((l) => l.trim() !== '')
+  if (lines.length === 0) {
+    blocks.push(createBlock('paragraph', '', { order: order++ }))
+    return {
+      title: filename.replace(/\.csv$/i, ''),
+      blocks,
+      tags: [],
+    }
+  }
+
+  // First row as heading
+  const headers = parseLine(lines[0])
+  blocks.push(createBlock('heading2', headers.join(' | '), { order: order++ }))
+
+  // Remaining rows as bullet list items
+  for (let i = 1; i < lines.length; i++) {
+    const fields = parseLine(lines[i])
+    const content = fields.join(' | ')
+    blocks.push(createBlock('bullet-list', content, { order: order++ }))
+  }
+
+  return {
+    title: filename.replace(/\.csv$/i, ''),
+    blocks,
+    tags: [],
+  }
+}
+
 export async function parseFile(file: File): Promise<ParsedPage> {
   const name = file.name
   const ext = name.split('.').pop()?.toLowerCase() ?? ''
@@ -629,6 +690,10 @@ export async function parseFile(file: File): Promise<ParsedPage> {
     case 'pdf': {
       const buffer = await file.arrayBuffer()
       return parsePDF(buffer, name)
+    }
+    case 'csv': {
+      const text = await file.text()
+      return parseCSV(text, name)
     }
     default:
       throw new Error(`Unsupported file type: .${ext}`)

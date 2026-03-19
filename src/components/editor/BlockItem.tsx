@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useState } from 'react'
+import { useRef, useEffect, useCallback, useState, useMemo } from 'react'
 import {
   GripVertical,
   Plus,
@@ -6,10 +6,21 @@ import {
   Square,
   ChevronRight,
   AlertCircle,
+  Type,
+  Heading1,
+  Heading2,
+  Heading3,
+  List,
+  ListOrdered,
+  Quote,
+  Minus,
+  Code,
+  Image as ImageIcon,
 } from 'lucide-react'
-import type { Block, BlockType } from '../../types'
+import type { Block, BlockType, Page } from '../../types'
 import type { BlockEditorAPI } from '../../hooks/use-block-editor'
 import type { BlockDragAPI } from '../../hooks/use-block-drag'
+import { PageLinkPicker } from './PageLinkPicker'
 
 interface BlockItemProps {
   block: Block
@@ -49,6 +60,10 @@ const typeStyles: Partial<Record<BlockType, string>> = {
 export function BlockItem({ block, editor, drag }: BlockItemProps) {
   const contentRef = useRef<HTMLDivElement>(null)
   const [showSlashMenu, setShowSlashMenu] = useState(false)
+  const [slashFilter, setSlashFilter] = useState('')
+  const [showLinkPicker, setShowLinkPicker] = useState(false)
+  const [linkPickerQuery, setLinkPickerQuery] = useState('')
+  const [linkPickerPos, setLinkPickerPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 })
   const isFocused = editor.focusedBlockId === block.id
 
   // Register ref
@@ -89,12 +104,29 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
     const html = contentRef.current.innerHTML
     editor.updateBlock(block.id, { content: html })
 
-    // Check for slash command
+    // Check for slash command with type-ahead
     const text = contentRef.current.textContent || ''
-    if (text === '/') {
+    if (text.startsWith('/')) {
       setShowSlashMenu(true)
+      setSlashFilter(text.slice(1).toLowerCase())
     } else {
       setShowSlashMenu(false)
+      setSlashFilter('')
+    }
+
+    // Check for [[ page link trigger
+    const bracketMatch = text.match(/\[\[([^\]]*)$/)
+    if (bracketMatch) {
+      setShowLinkPicker(true)
+      setLinkPickerQuery(bracketMatch[1])
+      // Position picker near cursor
+      const sel = window.getSelection()
+      if (sel && sel.rangeCount > 0) {
+        const rect = sel.getRangeAt(0).getBoundingClientRect()
+        setLinkPickerPos({ top: rect.bottom + 4, left: rect.left })
+      }
+    } else {
+      setShowLinkPicker(false)
     }
   }, [block.id, editor])
 
@@ -211,6 +243,32 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
     editor.transformBlock(block.id, type)
   }
 
+  const handlePageLinkSelect = (page: Page) => {
+    setShowLinkPicker(false)
+    if (!contentRef.current) return
+
+    // Remove the [[ trigger text and replace with a styled page link
+    const text = contentRef.current.textContent || ''
+    const bracketIdx = text.lastIndexOf('[[')
+    if (bracketIdx !== -1) {
+      const before = text.slice(0, bracketIdx)
+      const linkHtml = `<a href="#" data-page-id="${page.id}" class="page-link-inline" contenteditable="false">${page.icon || '📄'} ${page.title || 'Untitled'}</a>`
+      const newContent = before + linkHtml
+      contentRef.current.innerHTML = newContent
+      editor.updateBlock(block.id, { content: newContent })
+
+      // Place cursor after the link
+      const sel = window.getSelection()
+      if (sel) {
+        const range = document.createRange()
+        range.selectNodeContents(contentRef.current)
+        range.collapse(false)
+        sel.removeAllRanges()
+        sel.addRange(range)
+      }
+    }
+  }
+
   const isDragOver = drag?.state.dragOverId === block.id
   const dropPosition = drag?.state.dropPosition
   const isDragged = drag?.state.dragId === block.id
@@ -240,34 +298,104 @@ export function BlockItem({ block, editor, drag }: BlockItemProps) {
     )
   }
 
+  // Image blocks render an <img> element
+  if (block.type === 'image') {
+    const src = block.metadata.src as string | undefined
+    const alt = (block.metadata.alt as string) || ''
+    return (
+      <div className={`group relative flex flex-col py-1 px-1 ${dropIndicatorClass} ${isDragged ? 'opacity-30' : ''}`} {...dragProps}>
+        <div className="flex items-start">
+          <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
+          <div className="flex-1">
+            {src ? (
+              <img
+                src={src}
+                alt={alt}
+                className="max-w-full rounded-[var(--radius-lg)] border border-border"
+                loading="lazy"
+              />
+            ) : (
+              <div className="flex items-center justify-center h-[120px] rounded-[var(--radius-lg)] bg-bg-inset border border-border text-text-muted text-[13px]">
+                No image source
+              </div>
+            )}
+            {alt && (
+              <p className="text-[12px] text-text-muted mt-1.5 text-center">{alt}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const isToggleOpen = block.type === 'toggle' && !!block.metadata.open
+  const isCallout = block.type === 'callout'
+
   return (
-    <div className={`group relative flex items-start py-0.5 px-1 ${dropIndicatorClass} ${isDragged ? 'opacity-30' : ''}`} {...dragProps}>
-      <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
-
-      {/* Block-type prefix */}
-      <BlockPrefix block={block} editor={editor} />
-
-      {/* ContentEditable */}
+    <div className={isDragged ? 'opacity-30' : ''}>
       <div
-        ref={contentRef}
-        contentEditable
-        suppressContentEditableWarning
-        onInput={handleInput}
-        onKeyDown={handleKeyDown}
-        onFocus={handleFocus}
-        data-placeholder={placeholders[block.type] || ''}
-        className={`
-          flex-1 outline-none min-h-[1.5em] text-text-primary
-          empty:before:content-[attr(data-placeholder)]
-          empty:before:text-text-placeholder
-          caret-accent break-words
-          ${typeStyles[block.type] || 'text-[15px] leading-relaxed'}
-        `}
-      />
+        className={`group relative flex items-start py-0.5 px-1 ${dropIndicatorClass} ${isCallout ? 'bg-warning/5 border border-warning/15 rounded-[var(--radius-lg)] p-3 my-1' : ''}`}
+        {...dragProps}
+      >
+        <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
 
-      {/* Slash command menu */}
-      {showSlashMenu && (
-        <SlashCommandMenu onSelect={handleSlashSelect} onClose={() => setShowSlashMenu(false)} />
+        {/* Block-type prefix */}
+        <BlockPrefix block={block} editor={editor} />
+
+        {/* ContentEditable */}
+        <div
+          ref={contentRef}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={handleInput}
+          onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
+          data-placeholder={placeholders[block.type] || ''}
+          className={`
+            flex-1 outline-none min-h-[1.5em] text-text-primary
+            empty:before:content-[attr(data-placeholder)]
+            empty:before:text-text-placeholder
+            caret-accent break-words
+            ${typeStyles[block.type] || 'text-[15px] leading-relaxed'}
+          `}
+        />
+
+        {/* Slash command menu */}
+        {showSlashMenu && (
+          <SlashCommandMenu filter={slashFilter} onSelect={handleSlashSelect} onClose={() => setShowSlashMenu(false)} />
+        )}
+
+        {/* Page link picker */}
+        {showLinkPicker && (
+          <PageLinkPicker
+            position={linkPickerPos}
+            initialQuery={linkPickerQuery}
+            onSelect={handlePageLinkSelect}
+            onClose={() => setShowLinkPicker(false)}
+          />
+        )}
+      </div>
+
+      {/* Toggle children */}
+      {isToggleOpen && (
+        <div className="ml-8 pl-3 border-l-2 border-separator">
+          {block.children.length > 0 ? (
+            block.children.map((child) => (
+              <BlockItem key={child.id} block={child} editor={editor} drag={drag} />
+            ))
+          ) : (
+            <div
+              className="py-1 px-1 text-[13px] text-text-placeholder cursor-text"
+              onClick={() => {
+                // Add a child block inside the toggle
+                const childBlock = { id: crypto.randomUUID(), type: 'paragraph' as const, content: '', metadata: {}, children: [], order: 0 }
+                editor.updateBlock(block.id, { children: [...block.children, childBlock] })
+              }}
+            >
+              Click to add content…
+            </div>
+          )}
+        </div>
       )}
     </div>
   )
@@ -337,9 +465,13 @@ function BlockPrefix({ block, editor }: { block: Block; editor: BlockEditorAPI }
   }
 
   if (block.type === 'toggle') {
+    const isOpen = !!block.metadata.open
     return (
-      <button className="mr-1 mt-[3px] flex-shrink-0 text-text-muted hover:text-text-primary transition-theme">
-        <ChevronRight className="w-4 h-4" />
+      <button
+        onClick={() => editor.updateBlock(block.id, { metadata: { ...block.metadata, open: !isOpen } })}
+        className="mr-1 mt-[3px] flex-shrink-0 text-text-muted hover:text-text-primary transition-theme"
+      >
+        <ChevronRight className={`w-4 h-4 transition-transform duration-150 ${isOpen ? 'rotate-90' : ''}`} />
       </button>
     )
   }
@@ -353,59 +485,118 @@ interface SlashMenuItem {
   type: BlockType
   label: string
   description: string
+  icon: React.ReactNode
+  keywords: string[] // extra search terms
 }
 
 const slashItems: SlashMenuItem[] = [
-  { type: 'paragraph', label: 'Text', description: 'Plain text block' },
-  { type: 'heading1', label: 'Heading 1', description: 'Large heading' },
-  { type: 'heading2', label: 'Heading 2', description: 'Medium heading' },
-  { type: 'heading3', label: 'Heading 3', description: 'Small heading' },
-  { type: 'bullet-list', label: 'Bullet List', description: 'Unordered list' },
-  { type: 'numbered-list', label: 'Numbered List', description: 'Ordered list' },
-  { type: 'todo', label: 'To-do', description: 'Checkbox item' },
-  { type: 'toggle', label: 'Toggle', description: 'Collapsible content' },
-  { type: 'quote', label: 'Quote', description: 'Block quote' },
-  { type: 'callout', label: 'Callout', description: 'Highlighted note' },
-  { type: 'divider', label: 'Divider', description: 'Horizontal rule' },
-  { type: 'code', label: 'Code', description: 'Code block' },
+  { type: 'paragraph', label: 'Text', description: 'Plain text block', icon: <Type className="w-4 h-4" />, keywords: ['text', 'paragraph', 'plain'] },
+  { type: 'heading1', label: 'Heading 1', description: 'Large heading', icon: <Heading1 className="w-4 h-4" />, keywords: ['h1', 'title', 'heading'] },
+  { type: 'heading2', label: 'Heading 2', description: 'Medium heading', icon: <Heading2 className="w-4 h-4" />, keywords: ['h2', 'subtitle', 'heading'] },
+  { type: 'heading3', label: 'Heading 3', description: 'Small heading', icon: <Heading3 className="w-4 h-4" />, keywords: ['h3', 'heading'] },
+  { type: 'bullet-list', label: 'Bullet List', description: 'Unordered list', icon: <List className="w-4 h-4" />, keywords: ['ul', 'bullet', 'list', 'unordered'] },
+  { type: 'numbered-list', label: 'Numbered List', description: 'Ordered list', icon: <ListOrdered className="w-4 h-4" />, keywords: ['ol', 'numbered', 'ordered'] },
+  { type: 'todo', label: 'To-do', description: 'Checkbox item', icon: <CheckSquare className="w-4 h-4" />, keywords: ['checkbox', 'task', 'todo', 'check'] },
+  { type: 'toggle', label: 'Toggle', description: 'Collapsible content', icon: <ChevronRight className="w-4 h-4" />, keywords: ['toggle', 'collapse', 'expand', 'accordion'] },
+  { type: 'quote', label: 'Quote', description: 'Block quote', icon: <Quote className="w-4 h-4" />, keywords: ['blockquote', 'quote', 'cite'] },
+  { type: 'callout', label: 'Callout', description: 'Highlighted note', icon: <AlertCircle className="w-4 h-4" />, keywords: ['callout', 'note', 'warning', 'info'] },
+  { type: 'divider', label: 'Divider', description: 'Horizontal rule', icon: <Minus className="w-4 h-4" />, keywords: ['hr', 'divider', 'separator', 'line'] },
+  { type: 'code', label: 'Code', description: 'Code block', icon: <Code className="w-4 h-4" />, keywords: ['code', 'snippet', 'programming'] },
+  { type: 'image', label: 'Image', description: 'Embed an image', icon: <ImageIcon className="w-4 h-4" />, keywords: ['image', 'picture', 'photo', 'img'] },
 ]
 
 function SlashCommandMenu({
+  filter,
   onSelect,
   onClose,
 }: {
+  filter: string
   onSelect: (type: BlockType) => void
   onClose: () => void
 }) {
+  const [selectedIdx, setSelectedIdx] = useState(0)
+
+  const filtered = useMemo(() => {
+    if (!filter) return slashItems
+    const q = filter.toLowerCase()
+    return slashItems.filter(
+      (item) =>
+        item.label.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q) ||
+        item.keywords.some((k) => k.includes(q)),
+    )
+  }, [filter])
+
+  // Reset selection when filter changes
+  useEffect(() => {
+    setSelectedIdx(0)
+  }, [filter])
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault()
         onClose()
+        return
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        setSelectedIdx((i) => Math.min(i + 1, filtered.length - 1))
+        return
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        setSelectedIdx((i) => Math.max(i - 1, 0))
+        return
+      }
+      if (e.key === 'Enter' && filtered.length > 0) {
+        e.preventDefault()
+        onSelect(filtered[selectedIdx]?.type ?? filtered[0].type)
+        return
       }
     }
     document.addEventListener('keydown', handleKey)
     return () => document.removeEventListener('keydown', handleKey)
-  }, [onClose])
+  }, [onClose, onSelect, filtered, selectedIdx])
+
+  if (filtered.length === 0) {
+    return (
+      <div className="absolute left-0 sm:left-12 top-full z-30 mt-1.5 w-[260px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border rounded-[var(--radius-xl)] shadow-float py-4 animate-[fadeIn_0.1s_ease]">
+        <div className="px-4 text-[13px] text-text-muted text-center">No matching blocks</div>
+      </div>
+    )
+  }
 
   return (
-    <div className="absolute left-0 sm:left-12 top-full z-30 mt-1.5 w-[240px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border rounded-[var(--radius-xl)] shadow-float py-1.5 max-h-[340px] overflow-y-auto animate-[fadeIn_0.1s_ease]">
+    <div className="absolute left-0 sm:left-12 top-full z-30 mt-1.5 w-[260px] max-w-[calc(100vw-2rem)] bg-bg-overlay border border-border rounded-[var(--radius-xl)] shadow-float py-1.5 max-h-[340px] overflow-y-auto animate-[fadeIn_0.1s_ease]">
       <div className="px-3 py-1.5">
         <span className="text-[11px] font-medium text-text-muted uppercase tracking-wider">
-          Basic blocks
+          {filter ? 'Matching blocks' : 'Basic blocks'}
         </span>
       </div>
-      {slashItems.map((item) => (
+      {filtered.map((item, idx) => (
         <button
           key={item.type}
           onClick={() => onSelect(item.type)}
-          className="flex flex-col w-full px-3.5 py-2.5 text-left hover:bg-bg-hover rounded-[var(--radius-md)] mx-1 transition-theme"
+          onMouseEnter={() => setSelectedIdx(idx)}
+          className={`
+            flex items-center gap-3 w-full px-3.5 py-2 text-left rounded-[var(--radius-md)] mx-1 transition-theme
+            ${idx === selectedIdx ? 'bg-bg-hover' : ''}
+          `}
           style={{ width: 'calc(100% - 8px)' }}
         >
-          <span className="text-[13px] text-text-primary">{item.label}</span>
-          <span className="text-[11px] text-text-muted">{item.description}</span>
+          <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-[var(--radius-md)] bg-bg-inset text-text-secondary">
+            {item.icon}
+          </span>
+          <div className="flex flex-col">
+            <span className="text-[13px] text-text-primary">{item.label}</span>
+            <span className="text-[11px] text-text-muted">{item.description}</span>
+          </div>
         </button>
       ))}
+      <div className="px-3 pt-1.5 pb-0.5 border-t border-separator mt-1">
+        <span className="text-[10px] text-text-muted">↑↓ Navigate · ↵ Select · Esc Close</span>
+      </div>
     </div>
   )
 }

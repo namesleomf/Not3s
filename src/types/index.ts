@@ -16,9 +16,7 @@ export type BlockType =
   | 'divider'
   | 'code'
   | 'image'
-  | 'table'
-  | 'page-link'
-  | 'bookmark'
+  | 'page-link' // V2: internal linking
 
 export interface Block {
   id: string
@@ -37,8 +35,8 @@ export interface Page {
   childrenIds: string[]
   blocks: Block[]
   tags: string[]
-  linkedPageIds: string[]
-  backlinks: string[] // IDs of pages that link TO this page
+  linkedPageIds: string[] // Populated by internal linking feature
+  backlinks: string[] // V2: computed from linkedPageIds across pages
   isPinned: boolean
   isFavorite: boolean
   isArchived: boolean

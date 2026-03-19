@@ -2,6 +2,7 @@
 
 import { WorkspaceProvider } from './context/workspace-context'
 import { ThemeProvider } from './context/theme-context'
+import { EditorProvider } from './context/editor-context'
 import { AppShell } from './components/app-shell/AppShell'
 import { TopBar } from './components/pages/TopBar'
 import { PageHeader } from './components/pages/PageHeader'
@@ -15,6 +16,23 @@ import { CommandPalette } from './components/editor/CommandPalette'
 import { usePages } from './hooks/use-pages'
 import { useSearch } from './hooks/use-search'
 import { useKeyboardShortcuts } from './hooks/use-keyboard-shortcuts'
+import { useBlockEditor } from './hooks/use-block-editor'
+
+function EditorView() {
+  const editor = useBlockEditor()
+
+  return (
+    <EditorProvider value={editor}>
+      <CommandBar />
+      <div className="flex-1 overflow-y-auto bg-bg-page">
+        <PageHeader />
+        <div className="px-4 sm:px-8 md:px-12 pb-32 max-w-[720px] mx-auto w-full">
+          <BlockEditor />
+        </div>
+      </div>
+    </EditorProvider>
+  )
+}
 
 function MainContent() {
   const { selectedPage } = usePages()
@@ -55,13 +73,7 @@ function MainContent() {
   return (
     <>
       <TopBar />
-      <CommandBar />
-      <div className="flex-1 overflow-y-auto bg-bg-page">
-        <PageHeader />
-        <div className="px-4 sm:px-8 md:px-12 pb-32 max-w-[720px] mx-auto w-full">
-          <BlockEditor />
-        </div>
-      </div>
+      <EditorView />
     </>
   )
 }

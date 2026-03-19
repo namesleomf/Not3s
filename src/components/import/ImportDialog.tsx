@@ -12,8 +12,8 @@ interface ImportDialogProps {
   onClose: () => void
 }
 
-const ACCEPTED_EXTENSIONS = ['.md', '.markdown', '.html', '.htm', '.pdf']
-const ACCEPT_STRING = '.md,.markdown,.html,.htm,.pdf'
+const ACCEPTED_EXTENSIONS = ['.md', '.markdown', '.html', '.htm', '.pdf', '.csv']
+const ACCEPT_STRING = '.md,.markdown,.html,.htm,.pdf,.csv'
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -26,6 +26,7 @@ function getFileIcon(name: string) {
   if (ext === 'md' || ext === 'markdown') return <FileText className="w-4 h-4 text-accent" />
   if (ext === 'html' || ext === 'htm') return <FileCode className="w-4 h-4 text-success" />
   if (ext === 'pdf') return <FileIcon className="w-4 h-4 text-danger" />
+  if (ext === 'csv') return <FileIcon className="w-4 h-4 text-accent" />
   return <FileIcon className="w-4 h-4 text-text-muted" />
 }
 
@@ -175,7 +176,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
               Drop files here or click to browse
             </p>
             <p className="text-[12px] text-text-muted mt-0.5">
-              Supports .md, .html, .pdf — Notion &amp; Obsidian compatible
+              Supports .md, .html, .pdf, .csv — Notion &amp; Obsidian compatible
             </p>
           </div>
           <input

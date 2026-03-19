@@ -129,7 +129,7 @@ export function PageTreeItem({ pageId, depth }: PageTreeItemProps) {
         <button
           onClick={() => select(pageId)}
           className={`
-            group flex items-center gap-1 w-full h-9 pr-2 text-left
+            group flex items-center gap-1 w-full h-[38px] pr-2 text-left relative
             text-[13px] rounded-[var(--radius-lg)] transition-theme
             ${isSelected
               ? 'bg-bg-selected text-text-primary font-medium'
@@ -138,6 +138,11 @@ export function PageTreeItem({ pageId, depth }: PageTreeItemProps) {
           `}
           style={{ paddingLeft: `${10 + depth * 16}px` }}
         >
+          {/* Selected accent indicator */}
+          {isSelected && (
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-accent rounded-full" />
+          )}
+
           {/* Drag handle */}
           <span className="flex items-center justify-center w-3 h-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing text-text-muted">
             <GripVertical className="w-3 h-3" />

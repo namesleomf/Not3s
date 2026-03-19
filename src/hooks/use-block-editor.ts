@@ -43,7 +43,18 @@ export function useBlockEditor(): BlockEditorAPI {
     (newBlocks: Block[]) => {
       if (!selectedPage) return
       const ordered = newBlocks.map((b, i) => ({ ...b, order: i }))
-      update(selectedPage.id, { blocks: ordered })
+
+      // Extract linked page IDs from block content
+      const pageIdRegex = /data-page-id="([^"]+)"/g
+      const linkedIds = new Set<string>()
+      for (const b of ordered) {
+        let match
+        while ((match = pageIdRegex.exec(b.content)) !== null) {
+          linkedIds.add(match[1])
+        }
+      }
+
+      update(selectedPage.id, { blocks: ordered, linkedPageIds: Array.from(linkedIds) })
       history.push(ordered)
     },
     [selectedPage, update, history],

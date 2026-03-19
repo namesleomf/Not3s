@@ -2,34 +2,24 @@ import {
   Undo2,
   Redo2,
   Plus,
-  Link,
-  Tag,
-  Paperclip,
   Heading1,
   Heading2,
+  Heading3,
   Bold,
   Italic,
   List,
   ListOrdered,
   CheckSquare,
-  ChevronDown,
   Quote,
   Minus,
   AlertCircle,
   Code,
-  Image,
 } from 'lucide-react'
 import { IconButton } from '../ui/IconButton'
 import { Separator } from '../ui/Separator'
 import { Tooltip } from '../ui/Tooltip'
-
-interface CommandBarProps {
-  className?: string
-  onUndo?: () => void
-  onRedo?: () => void
-  canUndo?: boolean
-  canRedo?: boolean
-}
+import { useEditorContext } from '../../context/editor-context'
+import type { BlockType } from '../../types'
 
 interface ToolbarAction {
   icon: React.ReactNode
@@ -40,41 +30,84 @@ interface ToolbarAction {
   disabled?: boolean
 }
 
-export function CommandBar({ className = '', onUndo, onRedo, canUndo, canRedo }: CommandBarProps) {
-  const noop = () => {}
+export function CommandBar({ className = '' }: { className?: string }) {
+  const editor = useEditorContext()
+
+  if (!editor) return null
+
+  const { focusedBlockId, blocks } = editor
+  const focusedBlock = focusedBlockId ? blocks.find((b) => b.id === focusedBlockId) : null
+
+  const addBlockAfterFocused = (type: BlockType) => {
+    if (focusedBlockId) {
+      editor.addBlock(type, focusedBlockId)
+    } else {
+      editor.addBlock(type)
+    }
+  }
+
+  const transformOrAdd = (type: BlockType) => {
+    if (focusedBlockId) {
+      editor.transformBlock(focusedBlockId, type)
+    } else {
+      editor.addBlock(type)
+    }
+  }
+
+  const execFormat = (command: string) => {
+    document.execCommand(command, false)
+  }
+
+  const wrapInlineCode = () => {
+    const sel = window.getSelection()
+    if (!sel || sel.rangeCount === 0) return
+    const range = sel.getRangeAt(0)
+    let parent = range.commonAncestorContainer as HTMLElement
+    if (parent.nodeType === Node.TEXT_NODE) {
+      if (!parent.parentElement) return
+      parent = parent.parentElement
+    }
+    if (parent.tagName === 'CODE') {
+      const text = parent.textContent || ''
+      const textNode = document.createTextNode(text)
+      parent.replaceWith(textNode)
+    } else {
+      const code = document.createElement('code')
+      code.className = 'bg-bg-code px-1 py-0.5 rounded text-[0.9em] font-mono'
+      const fragment = range.extractContents()
+      code.appendChild(fragment)
+      range.insertNode(code)
+    }
+  }
 
   const undoRedo: ToolbarAction[] = [
-    { icon: <Undo2 />, label: 'Undo', shortcut: '⌘Z', action: onUndo ?? noop, disabled: onUndo ? !canUndo : false },
-    { icon: <Redo2 />, label: 'Redo', shortcut: '⇧⌘Z', action: onRedo ?? noop, disabled: onRedo ? !canRedo : false },
+    { icon: <Undo2 />, label: 'Undo', shortcut: '⌘Z', action: () => editor.undo(), disabled: !editor.canUndo },
+    { icon: <Redo2 />, label: 'Redo', shortcut: '⇧⌘Z', action: () => editor.redo(), disabled: !editor.canRedo },
   ]
 
   const insertActions: ToolbarAction[] = [
-    { icon: <Plus />, label: 'Add block', action: noop },
-    { icon: <Link />, label: 'Insert link', action: noop },
-    { icon: <Tag />, label: 'Add tag', action: noop },
-    { icon: <Paperclip />, label: 'Attach file', action: noop },
+    { icon: <Plus />, label: 'Add block', action: () => addBlockAfterFocused('paragraph') },
   ]
 
   const blockTypes: ToolbarAction[] = [
-    { icon: <Heading1 />, label: 'Heading 1', action: noop },
-    { icon: <Heading2 />, label: 'Heading 2', action: noop },
-    { icon: <List />, label: 'Bullet list', action: noop },
-    { icon: <ListOrdered />, label: 'Numbered list', action: noop },
-    { icon: <CheckSquare />, label: 'To-do list', action: noop },
-    { icon: <ChevronDown />, label: 'Toggle', action: noop },
+    { icon: <Heading1 />, label: 'Heading 1', action: () => transformOrAdd('heading1'), active: focusedBlock?.type === 'heading1' },
+    { icon: <Heading2 />, label: 'Heading 2', action: () => transformOrAdd('heading2'), active: focusedBlock?.type === 'heading2' },
+    { icon: <Heading3 />, label: 'Heading 3', action: () => transformOrAdd('heading3'), active: focusedBlock?.type === 'heading3' },
+    { icon: <List />, label: 'Bullet list', action: () => transformOrAdd('bullet-list'), active: focusedBlock?.type === 'bullet-list' },
+    { icon: <ListOrdered />, label: 'Numbered list', action: () => transformOrAdd('numbered-list'), active: focusedBlock?.type === 'numbered-list' },
+    { icon: <CheckSquare />, label: 'To-do list', action: () => transformOrAdd('todo'), active: focusedBlock?.type === 'todo' },
   ]
 
   const formatting: ToolbarAction[] = [
-    { icon: <Bold />, label: 'Bold', shortcut: '⌘B', action: noop },
-    { icon: <Italic />, label: 'Italic', shortcut: '⌘I', action: noop },
-    { icon: <Code />, label: 'Inline code', shortcut: '⌘E', action: noop },
+    { icon: <Bold />, label: 'Bold', shortcut: '⌘B', action: () => execFormat('bold') },
+    { icon: <Italic />, label: 'Italic', shortcut: '⌘I', action: () => execFormat('italic') },
+    { icon: <Code />, label: 'Inline code', shortcut: '⌘E', action: () => wrapInlineCode() },
   ]
 
   const extras: ToolbarAction[] = [
-    { icon: <Quote />, label: 'Quote', action: noop },
-    { icon: <Minus />, label: 'Divider', action: noop },
-    { icon: <AlertCircle />, label: 'Callout', action: noop },
-    { icon: <Image />, label: 'Image', action: noop },
+    { icon: <Quote />, label: 'Quote', action: () => transformOrAdd('quote'), active: focusedBlock?.type === 'quote' },
+    { icon: <Minus />, label: 'Divider', action: () => addBlockAfterFocused('divider') },
+    { icon: <AlertCircle />, label: 'Callout', action: () => transformOrAdd('callout'), active: focusedBlock?.type === 'callout' },
   ]
 
   const renderGroup = (actions: ToolbarAction[]) =>
@@ -105,13 +138,7 @@ export function CommandBar({ className = '', onUndo, onRedo, canUndo, canRedo }:
         >
           {renderGroup(undoRedo)}
           <Separator orientation="vertical" className="mx-1.5 h-5" />
-          {/* Insert actions: show only Add block on mobile, all on sm+ */}
-          <span className="sm:hidden flex items-center gap-0.5">
-            {renderGroup(insertActions.slice(0, 1))}
-          </span>
-          <span className="hidden sm:flex items-center gap-0.5">
-            {renderGroup(insertActions)}
-          </span>
+          {renderGroup(insertActions)}
           <Separator orientation="vertical" className="mx-1.5 h-5" />
           {/* Block types: show first 4 on mobile, all on sm+ */}
           <span className="sm:hidden flex items-center gap-0.5">
