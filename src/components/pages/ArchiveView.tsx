@@ -38,7 +38,6 @@ export function ArchiveView() {
               key={page.id}
               className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)] hover:bg-bg-hover transition-theme group cursor-pointer"
               onClick={() => {
-                toggleArchive(page.id)
                 select(page.id)
               }}
             >

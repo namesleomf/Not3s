@@ -280,7 +280,7 @@ function BlockHandle({ onAdd, onDragStart }: { onAdd: () => void; onDragStart?: 
     <div className="flex items-center gap-0.5 mr-1 mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex-shrink-0">
       <button
         onClick={onAdd}
-        className="flex items-center justify-center w-5 h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover hover:text-text-primary transition-theme"
+        className="flex items-center justify-center w-7 h-7 sm:w-5 sm:h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover hover:text-text-primary transition-theme"
         title="Add block below"
       >
         <Plus className="w-3.5 h-3.5" />
@@ -288,7 +288,7 @@ function BlockHandle({ onAdd, onDragStart }: { onAdd: () => void; onDragStart?: 
       <span
         draggable={!!onDragStart}
         onDragStart={onDragStart}
-        className="flex items-center justify-center w-5 h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover cursor-grab active:cursor-grabbing transition-theme"
+        className="flex items-center justify-center w-7 h-7 sm:w-5 sm:h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover cursor-grab active:cursor-grabbing transition-theme"
       >
         <GripVertical className="w-3.5 h-3.5" />
       </span>
@@ -399,7 +399,7 @@ function SlashCommandMenu({
         <button
           key={item.type}
           onClick={() => onSelect(item.type)}
-          className="flex flex-col w-full px-3.5 py-2 text-left hover:bg-bg-hover rounded-[var(--radius-md)] mx-1 transition-theme"
+          className="flex flex-col w-full px-3.5 py-2.5 text-left hover:bg-bg-hover rounded-[var(--radius-md)] mx-1 transition-theme"
           style={{ width: 'calc(100% - 8px)' }}
         >
           <span className="text-[13px] text-text-primary">{item.label}</span>

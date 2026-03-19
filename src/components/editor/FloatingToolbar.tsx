@@ -69,7 +69,10 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
 
     // Check if already wrapped in <code>
     let parent = range.commonAncestorContainer as HTMLElement
-    if (parent.nodeType === Node.TEXT_NODE) parent = parent.parentElement!
+    if (parent.nodeType === Node.TEXT_NODE) {
+      if (!parent.parentElement) return
+      parent = parent.parentElement
+    }
 
     if (parent.tagName === 'CODE') {
       // Unwrap
@@ -92,7 +95,10 @@ export function FloatingToolbar({ selection }: FloatingToolbarProps) {
 
     const range = sel.getRangeAt(0)
     let parent = range.commonAncestorContainer as HTMLElement
-    if (parent.nodeType === Node.TEXT_NODE) parent = parent.parentElement!
+    if (parent.nodeType === Node.TEXT_NODE) {
+      if (!parent.parentElement) return
+      parent = parent.parentElement
+    }
 
     if (parent.tagName === 'A') {
       // Unwrap link

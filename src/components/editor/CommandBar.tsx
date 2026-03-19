@@ -97,7 +97,7 @@ export function CommandBar({ className = '', onUndo, onRedo, canUndo, canRedo }:
       <div className="relative max-w-full">
         <div
           className="
-            inline-flex items-center gap-0.5 px-2 h-11
+            inline-flex items-center gap-0.5 px-2 h-12 sm:h-11
             bg-bg-page border border-border
             rounded-[var(--radius-pill)]
             shadow-float

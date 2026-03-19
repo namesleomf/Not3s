@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { Upload, X, FileText, FileCode, File as FileIcon, Loader2 } from 'lucide-react'
 import { Dialog } from '../ui/Dialog'
 import { Button } from '../ui/Button'
@@ -41,12 +41,24 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
   const [dragOver, setDragOver] = useState(false)
   const [results, setResults] = useState<{ success: number; errors: string[] } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const autoCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (autoCloseTimer.current) clearTimeout(autoCloseTimer.current)
+    }
+  }, [])
 
   const reset = useCallback(() => {
     setFiles([])
     setImporting(false)
     setDragOver(false)
     setResults(null)
+    if (autoCloseTimer.current) {
+      clearTimeout(autoCloseTimer.current)
+      autoCloseTimer.current = null
+    }
   }, [])
 
   const handleClose = useCallback(() => {
@@ -115,7 +127,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
 
     // Auto-close after success with no errors
     if (errors.length === 0 && success > 0) {
-      setTimeout(() => {
+      autoCloseTimer.current = setTimeout(() => {
         handleClose()
       }, 800)
     }
