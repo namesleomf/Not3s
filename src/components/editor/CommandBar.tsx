@@ -101,14 +101,25 @@ export function CommandBar({ className = '', onUndo, onRedo, canUndo, canRedo }:
             bg-bg-page border border-border
             rounded-[var(--radius-pill)]
             shadow-float
-            overflow-x-auto scrollbar-none
           "
         >
           {renderGroup(undoRedo)}
           <Separator orientation="vertical" className="mx-1.5 h-5" />
-          {renderGroup(insertActions)}
+          {/* Insert actions: show only Add block on mobile, all on sm+ */}
+          <span className="sm:hidden flex items-center gap-0.5">
+            {renderGroup(insertActions.slice(0, 1))}
+          </span>
+          <span className="hidden sm:flex items-center gap-0.5">
+            {renderGroup(insertActions)}
+          </span>
           <Separator orientation="vertical" className="mx-1.5 h-5" />
-          {renderGroup(blockTypes)}
+          {/* Block types: show first 4 on mobile, all on sm+ */}
+          <span className="sm:hidden flex items-center gap-0.5">
+            {renderGroup(blockTypes.slice(0, 4))}
+          </span>
+          <span className="hidden sm:flex items-center gap-0.5">
+            {renderGroup(blockTypes)}
+          </span>
           <Separator orientation="vertical" className="mx-1.5 h-5 hidden sm:block" />
           <span className="hidden sm:flex items-center gap-0.5">
             {renderGroup(formatting)}
@@ -118,8 +129,6 @@ export function CommandBar({ className = '', onUndo, onRedo, canUndo, canRedo }:
             {renderGroup(extras)}
           </span>
         </div>
-        {/* Right fade hint for horizontal scroll on mobile */}
-        <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none rounded-r-[var(--radius-pill)] bg-gradient-to-l from-bg-page to-transparent sm:hidden" />
       </div>
     </div>
   )
