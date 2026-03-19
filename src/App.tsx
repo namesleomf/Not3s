@@ -17,6 +17,8 @@ import { usePages } from './hooks/use-pages'
 import { useSearch } from './hooks/use-search'
 import { useKeyboardShortcuts } from './hooks/use-keyboard-shortcuts'
 import { useBlockEditor } from './hooks/use-block-editor'
+import { BacklinksPanel } from './components/editor/BacklinksPanel'
+import { PageOutline } from './components/editor/PageOutline'
 
 function EditorView() {
   const editor = useBlockEditor()
@@ -24,11 +26,15 @@ function EditorView() {
   return (
     <EditorProvider value={editor}>
       <CommandBar />
-      <div className="flex-1 overflow-y-auto bg-bg-page">
-        <PageHeader />
-        <div className="px-4 sm:px-8 md:px-12 pb-32 max-w-[720px] mx-auto w-full">
-          <BlockEditor />
+      <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 overflow-y-auto bg-bg-page">
+          <PageHeader />
+          <div className="px-4 sm:px-8 md:px-12 pb-32 max-w-[720px] mx-auto w-full">
+            <BlockEditor />
+            <BacklinksPanel />
+          </div>
         </div>
+        <PageOutline />
       </div>
     </EditorProvider>
   )

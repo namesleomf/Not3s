@@ -20,7 +20,7 @@ export function FilterNav() {
           key={f.id}
           onClick={() => setFilter(f.id)}
           className={`
-            flex items-center gap-3 h-9 px-3 w-full
+            relative flex items-center gap-3 h-9 px-3 w-full
             text-[13px] font-medium
             rounded-[var(--radius-lg)] transition-theme text-left
             ${activeFilter === f.id
@@ -29,6 +29,9 @@ export function FilterNav() {
             }
           `}
         >
+          {activeFilter === f.id && (
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-accent rounded-full" />
+          )}
           <span className="[&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:stroke-[1.5] flex-shrink-0 text-text-muted">
             {f.icon}
           </span>

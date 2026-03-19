@@ -20,11 +20,11 @@ export function Sidebar() {
         <QuickCreateButton />
       </div>
 
-      <Separator className="mx-4 my-1.5 opacity-60" />
+      <Separator className="mx-4 my-1.5" />
 
       <FilterNav />
 
-      <Separator className="mx-4 my-1.5 opacity-60" />
+      <Separator className="mx-4 my-1.5" />
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-1">
         <div className="px-3 pt-1 pb-1.5">
@@ -35,7 +35,7 @@ export function Sidebar() {
 
       <TagSection />
 
-      <Separator className="mx-4 opacity-60" />
+      <Separator className="mx-4" />
 
       <SidebarFooter />
     </div>

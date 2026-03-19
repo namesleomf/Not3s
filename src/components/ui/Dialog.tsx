@@ -73,7 +73,7 @@ export function Dialog({ open, onClose, children, className = '' }: DialogProps)
         aria-modal="true"
         className={`
           relative z-10
-          bg-bg-overlay border border-border
+          bg-bg-overlay border border-border/40
           rounded-[var(--radius-xl)]
           shadow-float
           animate-[scaleIn_0.15s_ease]

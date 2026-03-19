@@ -9,6 +9,7 @@ import {
   PanelLeft,
   FileDown,
   FileText,
+  List,
 } from 'lucide-react'
 import { IconButton } from '../ui/IconButton'
 import { Dropdown, DropdownItem } from '../ui/Dropdown'
@@ -24,7 +25,7 @@ export function TopBar() {
   const { selectedPage, togglePin, toggleFavorite, toggleArchive, duplicate, trash } = usePages()
   const { settings, updateSettings } = useSettings()
   const { isMobile } = useResponsive()
-  const { dispatch } = useWorkspace()
+  const { state, dispatch } = useWorkspace()
 
   return (
     <div className="flex items-center h-12 px-4 flex-shrink-0">
@@ -83,6 +84,15 @@ export function TopBar() {
             onClick={() => togglePin(selectedPage.id)}
           >
             <Pin className={selectedPage.isPinned ? 'fill-current' : ''} />
+          </IconButton>
+
+          <IconButton
+            size="sm"
+            label={state.ui.outlineOpen ? 'Close outline' : 'Open outline'}
+            active={state.ui.outlineOpen}
+            onClick={() => dispatch({ type: 'UI_SET', payload: { outlineOpen: !state.ui.outlineOpen } })}
+          >
+            <List />
           </IconButton>
 
           <Dropdown

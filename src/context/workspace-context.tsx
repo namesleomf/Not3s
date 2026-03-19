@@ -10,6 +10,39 @@ import {
 import type { WorkspaceState, WorkspaceAction } from '../types'
 import { storage } from '../lib/storage'
 
+// ---- Helpers ----
+
+/** Recompute backlinks for all pages based on their linkedPageIds */
+function recomputeBacklinks(pages: Record<string, import('../types').Page>): Record<string, import('../types').Page> {
+  // Build reverse index: target → set of source ids
+  const reverseMap: Record<string, Set<string>> = {}
+  for (const page of Object.values(pages)) {
+    if (page.isTrashed) continue
+    for (const targetId of page.linkedPageIds) {
+      if (!reverseMap[targetId]) reverseMap[targetId] = new Set()
+      reverseMap[targetId].add(page.id)
+    }
+  }
+
+  // Only clone pages whose backlinks actually changed
+  let changed = false
+  const next: Record<string, import('../types').Page> = {}
+  for (const [id, page] of Object.entries(pages)) {
+    const newBacklinks = reverseMap[id] ? Array.from(reverseMap[id]).sort() : []
+    const oldBacklinks = [...page.backlinks].sort()
+    if (
+      newBacklinks.length !== oldBacklinks.length ||
+      newBacklinks.some((v, i) => v !== oldBacklinks[i])
+    ) {
+      next[id] = { ...page, backlinks: newBacklinks }
+      changed = true
+    } else {
+      next[id] = page
+    }
+  }
+  return changed ? next : pages
+}
+
 // ---- Reducer ----
 
 function workspaceReducer(
@@ -27,17 +60,19 @@ function workspaceReducer(
     case 'PAGE_UPDATE': {
       const existing = state.pages[action.payload.id]
       if (!existing) return state
-      return {
-        ...state,
-        pages: {
-          ...state.pages,
-          [action.payload.id]: {
-            ...existing,
-            ...action.payload.updates,
-            updatedAt: Date.now(),
-          },
+      let pages = {
+        ...state.pages,
+        [action.payload.id]: {
+          ...existing,
+          ...action.payload.updates,
+          updatedAt: Date.now(),
         },
       }
+      // Recompute backlinks when linkedPageIds change
+      if (action.payload.updates.linkedPageIds) {
+        pages = recomputeBacklinks(pages)
+      }
+      return { ...state, pages }
     }
 
     case 'PAGE_DELETE': {
@@ -132,7 +167,7 @@ function workspaceReducer(
     }
 
     case 'PAGES_SET':
-      return { ...state, pages: action.payload }
+      return { ...state, pages: recomputeBacklinks(action.payload) }
 
     // -- UI --
     case 'UI_SELECT_PAGE':
