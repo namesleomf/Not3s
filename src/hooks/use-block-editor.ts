@@ -1,0 +1,127 @@
+import { useCallback, useRef, useState } from 'react'
+import { usePages } from './use-pages'
+import { createBlock } from '../lib/page-utils'
+import type { Block, BlockType } from '../types'
+
+export interface BlockEditorAPI {
+  blocks: Block[]
+  addBlock: (type?: BlockType, afterId?: string) => Block
+  updateBlock: (id: string, updates: Partial<Block>) => void
+  deleteBlock: (id: string) => string | null // returns ID of block to focus
+  transformBlock: (id: string, newType: BlockType) => void
+  moveBlock: (id: string, direction: 'up' | 'down') => void
+  duplicateBlock: (id: string) => void
+  focusedBlockId: string | null
+  setFocusedBlockId: (id: string | null) => void
+  blockRefs: React.MutableRefObject<Map<string, HTMLElement>>
+}
+
+export function useBlockEditor(): BlockEditorAPI {
+  const { selectedPage, update } = usePages()
+  const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null)
+  const blockRefs = useRef<Map<string, HTMLElement>>(new Map())
+
+  const blocks = selectedPage?.blocks ?? []
+
+  const setBlocks = useCallback(
+    (newBlocks: Block[]) => {
+      if (!selectedPage) return
+      update(selectedPage.id, {
+        blocks: newBlocks.map((b, i) => ({ ...b, order: i })),
+      })
+    },
+    [selectedPage, update],
+  )
+
+  const addBlock = useCallback(
+    (type: BlockType = 'paragraph', afterId?: string) => {
+      const block = createBlock(type)
+      if (!afterId || blocks.length === 0) {
+        setBlocks([...blocks, block])
+      } else {
+        const idx = blocks.findIndex((b) => b.id === afterId)
+        const newBlocks = [...blocks]
+        newBlocks.splice(idx + 1, 0, block)
+        setBlocks(newBlocks)
+      }
+      setFocusedBlockId(block.id)
+      return block
+    },
+    [blocks, setBlocks],
+  )
+
+  const updateBlock = useCallback(
+    (id: string, updates: Partial<Block>) => {
+      setBlocks(blocks.map((b) => (b.id === id ? { ...b, ...updates } : b)))
+    },
+    [blocks, setBlocks],
+  )
+
+  const deleteBlock = useCallback(
+    (id: string): string | null => {
+      if (blocks.length <= 1) {
+        // Don't delete the last block, just clear it
+        setBlocks([{ ...blocks[0], content: '', type: 'paragraph', metadata: {} }])
+        return blocks[0].id
+      }
+      const idx = blocks.findIndex((b) => b.id === id)
+      const focusTarget = idx > 0 ? blocks[idx - 1].id : blocks[idx + 1]?.id ?? null
+      setBlocks(blocks.filter((b) => b.id !== id))
+      setFocusedBlockId(focusTarget)
+      return focusTarget
+    },
+    [blocks, setBlocks],
+  )
+
+  const transformBlock = useCallback(
+    (id: string, newType: BlockType) => {
+      setBlocks(
+        blocks.map((b) =>
+          b.id === id ? { ...b, type: newType, metadata: newType === 'todo' ? { checked: false } : {} } : b,
+        ),
+      )
+    },
+    [blocks, setBlocks],
+  )
+
+  const moveBlock = useCallback(
+    (id: string, direction: 'up' | 'down') => {
+      const idx = blocks.findIndex((b) => b.id === id)
+      if (idx === -1) return
+      if (direction === 'up' && idx === 0) return
+      if (direction === 'down' && idx === blocks.length - 1) return
+
+      const newBlocks = [...blocks]
+      const swapIdx = direction === 'up' ? idx - 1 : idx + 1
+      ;[newBlocks[idx], newBlocks[swapIdx]] = [newBlocks[swapIdx], newBlocks[idx]]
+      setBlocks(newBlocks)
+    },
+    [blocks, setBlocks],
+  )
+
+  const duplicateBlock = useCallback(
+    (id: string) => {
+      const idx = blocks.findIndex((b) => b.id === id)
+      if (idx === -1) return
+      const dupe = createBlock(blocks[idx].type, blocks[idx].content, { ...blocks[idx].metadata })
+      const newBlocks = [...blocks]
+      newBlocks.splice(idx + 1, 0, dupe)
+      setBlocks(newBlocks)
+      setFocusedBlockId(dupe.id)
+    },
+    [blocks, setBlocks],
+  )
+
+  return {
+    blocks,
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    transformBlock,
+    moveBlock,
+    duplicateBlock,
+    focusedBlockId,
+    setFocusedBlockId,
+    blockRefs,
+  }
+}
