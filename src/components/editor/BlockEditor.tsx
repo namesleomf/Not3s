@@ -1,9 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { BlockItem } from './BlockItem'
+import { FloatingToolbar } from './FloatingToolbar'
 import { useBlockEditor } from '../../hooks/use-block-editor'
+import { useTextSelection } from '../../hooks/use-text-selection'
 
 export function BlockEditor() {
   const editor = useBlockEditor()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const selection = useTextSelection(containerRef)
 
   // Focus first block on mount if none focused
   useEffect(() => {
@@ -15,7 +19,9 @@ export function BlockEditor() {
   if (editor.blocks.length === 0) return null
 
   return (
-    <div className="flex flex-col">
+    <div ref={containerRef} className="flex flex-col">
+      <FloatingToolbar selection={selection} />
+
       {editor.blocks.map((block) => (
         <BlockItem key={block.id} block={block} editor={editor} />
       ))}
@@ -26,10 +32,8 @@ export function BlockEditor() {
         onClick={() => {
           const lastBlock = editor.blocks[editor.blocks.length - 1]
           if (lastBlock && lastBlock.content === '' && lastBlock.type === 'paragraph') {
-            // Focus existing empty last block
             editor.setFocusedBlockId(lastBlock.id)
           } else {
-            // Add new block
             editor.addBlock('paragraph', lastBlock?.id)
           }
         }}
