@@ -7,6 +7,8 @@ import {
   Archive,
   Trash2,
   PanelLeft,
+  FileDown,
+  FileText,
 } from 'lucide-react'
 import { IconButton } from '../ui/IconButton'
 import { Dropdown, DropdownItem } from '../ui/Dropdown'
@@ -16,6 +18,7 @@ import { useSettings } from '../../hooks/use-settings'
 import { useResponsive } from '../../hooks/use-responsive'
 import { useWorkspace } from '../../context/workspace-context'
 import { Breadcrumb } from './Breadcrumb'
+import { exportPageAsMarkdown, exportPageAsHTML } from '../../lib/export'
 
 export function TopBar() {
   const { selectedPage, togglePin, toggleFavorite, toggleArchive, duplicate, trash } = usePages()
@@ -101,6 +104,19 @@ export function TopBar() {
               onClick={() => toggleArchive(selectedPage.id)}
             >
               Archive
+            </DropdownItem>
+            <Separator className="my-1" />
+            <DropdownItem
+              icon={<FileDown />}
+              onClick={() => exportPageAsMarkdown(selectedPage)}
+            >
+              Export as Markdown
+            </DropdownItem>
+            <DropdownItem
+              icon={<FileText />}
+              onClick={() => exportPageAsHTML(selectedPage)}
+            >
+              Export as HTML
             </DropdownItem>
             <Separator className="my-1" />
             <DropdownItem

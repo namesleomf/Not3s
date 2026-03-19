@@ -131,9 +131,9 @@ export function CommandBar({ className = '' }: { className?: string }) {
         <div
           className="
             inline-flex items-center gap-0.5 px-2 h-12 sm:h-11
-            bg-bg-page border border-border
+            bg-bg-overlay border border-border
             rounded-[var(--radius-pill)]
-            shadow-float
+            shadow-float backdrop-blur-sm
           "
         >
           {renderGroup(undoRedo)}

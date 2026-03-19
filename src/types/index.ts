@@ -31,6 +31,7 @@ export interface Page {
   id: string
   title: string
   icon: string | null
+  coverImage: string | null // gradient/color preset key or URL
   parentId: string | null
   childrenIds: string[]
   blocks: Block[]
@@ -74,6 +75,7 @@ export interface UIState {
   sidebarOpenMobile: boolean
   settingsOpen: boolean
   commandMenuOpen: boolean
+  importDialogOpen: boolean
   expandedPageIds: string[] // which page tree nodes are expanded
 }
 
