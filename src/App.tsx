@@ -1,3 +1,5 @@
+'use client'
+
 import { WorkspaceProvider } from './context/workspace-context'
 import { ThemeProvider } from './context/theme-context'
 import { AppShell } from './components/app-shell/AppShell'

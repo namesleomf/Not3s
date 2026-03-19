@@ -6,6 +6,8 @@ const KEYS = {
   ui: 'not3s-ui',
 } as const
 
+const isBrowser = typeof window !== 'undefined'
+
 export const DEFAULT_SETTINGS: Settings = {
   theme: 'paper-white',
   uiDensity: 'default',
@@ -41,14 +43,17 @@ function safeJsonParse<T>(json: string | null, fallback: T): T {
 
 export const storage = {
   loadPages(): Record<string, Page> {
+    if (!isBrowser) return {}
     return safeJsonParse(localStorage.getItem(KEYS.pages), {})
   },
 
   savePages(pages: Record<string, Page>): void {
+    if (!isBrowser) return
     localStorage.setItem(KEYS.pages, JSON.stringify(pages))
   },
 
   loadSettings(): Settings {
+    if (!isBrowser) return { ...DEFAULT_SETTINGS }
     const stored = safeJsonParse<Partial<Settings>>(
       localStorage.getItem(KEYS.settings),
       {},
@@ -57,10 +62,12 @@ export const storage = {
   },
 
   saveSettings(settings: Settings): void {
+    if (!isBrowser) return
     localStorage.setItem(KEYS.settings, JSON.stringify(settings))
   },
 
   loadUIState(): UIState {
+    if (!isBrowser) return { ...DEFAULT_UI_STATE }
     const stored = safeJsonParse<Partial<UIState>>(
       localStorage.getItem(KEYS.ui),
       {},
@@ -69,6 +76,7 @@ export const storage = {
   },
 
   saveUIState(ui: UIState): void {
+    if (!isBrowser) return
     localStorage.setItem(KEYS.ui, JSON.stringify(ui))
   },
 }
