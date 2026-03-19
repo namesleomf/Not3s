@@ -30,8 +30,6 @@
 
   /* Borders & Separators */
   --color-border: var(--color-border);
-  --color-border-subtle: var(--color-border-subtle);
-  --color-border-strong: var(--color-border-strong);
   --color-separator: var(--color-separator);
 
   /* Accent & Semantic */
@@ -92,8 +90,6 @@
 
   /* Borders & Separators */
   --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-subtle: rgba(0, 0, 0, 0.06);
-  --color-border-strong: rgba(0, 0, 0, 0.12);
   --color-separator: rgba(0, 0, 0, 0.05);
 
   /* Accent */
@@ -153,8 +149,6 @@
 
   /* Borders & Separators */
   --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-subtle: rgba(255, 255, 255, 0.06);
-  --color-border-strong: rgba(255, 255, 255, 0.12);
   --color-separator: rgba(255, 255, 255, 0.05);
 
   /* Accent */
@@ -273,24 +267,4 @@ body {
 @keyframes slideInFromRight {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
-}
-
-/* ============================================================
-   Premium Utility Classes (reference-style)
-   ============================================================ */
-.chip-button {
-  @apply inline-flex items-center justify-center
-    rounded-[var(--radius-md)] border border-border
-    bg-transparent hover:bg-bg-hover
-    text-text-secondary hover:text-text-primary
-    transition-all duration-200 active:scale-95;
-}
-
-.pill-toolbar {
-  @apply flex items-center rounded-[var(--radius-lg)]
-    bg-bg-page border border-border shadow-float p-1;
-}
-
-.glass-panel {
-  @apply bg-bg-app/80 backdrop-blur-xl border-b border-border;
 }

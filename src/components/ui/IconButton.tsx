@@ -23,12 +23,12 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         aria-label={label}
         className={`
           inline-flex items-center justify-center
-          rounded-full transition-all duration-200
+          rounded-[var(--radius-md)] transition-theme
           select-none cursor-pointer
           disabled:opacity-40 disabled:pointer-events-none
           ${active
             ? 'bg-bg-selected text-accent'
-            : 'text-text-secondary hover:text-text-primary hover:bg-bg-hover active:bg-bg-active active:scale-95'
+            : 'text-text-muted hover:text-text-secondary hover:bg-bg-hover active:bg-bg-active'
           }
           ${sizeClasses[size]}
           ${className}
