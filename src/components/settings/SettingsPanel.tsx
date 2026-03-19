@@ -1,9 +1,8 @@
-import { X, Sun, Moon } from 'lucide-react'
+import { X, Sun, Moon, Palette, PanelLeft, SlidersHorizontal } from 'lucide-react'
 import { useSettings } from '../../hooks/use-settings'
 import { useTheme } from '../../hooks/use-theme'
 import { IconButton } from '../ui/IconButton'
 import { ToggleSwitch } from '../ui/ToggleSwitch'
-import { Separator } from '../ui/Separator'
 import type { UIDensity } from '../../types'
 
 export function SettingsPanel() {
@@ -21,7 +20,7 @@ export function SettingsPanel() {
       />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 z-50 w-[380px] max-w-[90vw] bg-bg-overlay border-l border-border shadow-float animate-[slideInFromRight_0.2s_ease-out] overflow-y-auto">
+      <div className="fixed right-0 top-0 bottom-0 z-50 w-[420px] max-w-[90vw] bg-bg-overlay border-l border-border shadow-float animate-[slideInFromRight_0.2s_ease-out] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between h-14 px-6 border-b border-separator flex-shrink-0">
           <h2 className="text-[16px] font-semibold text-text-primary">Settings</h2>
@@ -30,22 +29,28 @@ export function SettingsPanel() {
           </IconButton>
         </div>
 
-        <div className="p-5 flex flex-col gap-6">
-          {/* Theme */}
-          <SettingsSection title="Appearance">
+        <div className="p-5 flex flex-col gap-5">
+          {/* Appearance */}
+          <SettingsCard icon={<Palette className="w-4 h-4" />} title="Appearance">
             <SettingsRow label="Theme">
               <div className="flex gap-2">
-                <ThemeOption
+                <ThemeCard
                   label="Paper White"
                   icon={<Sun className="w-4 h-4" />}
                   active={theme === 'paper-white'}
                   onClick={() => setTheme('paper-white')}
+                  previewBg="#ffffff"
+                  previewText="#1a1a1a"
+                  previewAccent="#f2f1ef"
                 />
-                <ThemeOption
+                <ThemeCard
                   label="OLED Black"
                   icon={<Moon className="w-4 h-4" />}
                   active={theme === 'oled-black'}
                   onClick={() => setTheme('oled-black')}
+                  previewBg="#111111"
+                  previewText="#e8e8e8"
+                  previewAccent="#1a1a1a"
                 />
               </div>
             </SettingsRow>
@@ -82,17 +87,18 @@ export function SettingsPanel() {
                   onChange={(e) => updateSettings({ fontScale: parseFloat(e.target.value) })}
                   className="flex-1 accent-accent h-1"
                 />
-                <span className="text-[12px] text-text-muted w-10 text-right font-mono">
+                <span
+                  className="text-text-muted w-10 text-right font-mono transition-all"
+                  style={{ fontSize: `${Math.round(settings.fontScale * 12)}px` }}
+                >
                   {Math.round(settings.fontScale * 100)}%
                 </span>
               </div>
             </SettingsRow>
-          </SettingsSection>
-
-          <Separator />
+          </SettingsCard>
 
           {/* Sidebar */}
-          <SettingsSection title="Sidebar">
+          <SettingsCard icon={<PanelLeft className="w-4 h-4" />} title="Sidebar">
             <SettingsRow label="Show metadata">
               <ToggleSwitch
                 checked={settings.showSidebarMetadata}
@@ -105,12 +111,10 @@ export function SettingsPanel() {
                 onChange={(v) => updateSettings({ translucentSidebar: v })}
               />
             </SettingsRow>
-          </SettingsSection>
-
-          <Separator />
+          </SettingsCard>
 
           {/* Behavior */}
-          <SettingsSection title="Behavior">
+          <SettingsCard icon={<SlidersHorizontal className="w-4 h-4" />} title="Behavior">
             <SettingsRow label="Confirm before delete">
               <ToggleSwitch
                 checked={settings.confirmBeforeDelete}
@@ -137,7 +141,7 @@ export function SettingsPanel() {
                 ))}
               </div>
             </SettingsRow>
-          </SettingsSection>
+          </SettingsCard>
         </div>
       </div>
     </>
@@ -146,12 +150,15 @@ export function SettingsPanel() {
 
 // --- Sub-components ---
 
-function SettingsSection({ title, children }: { title: string; children: React.ReactNode }) {
+function SettingsCard({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
-    <div>
-      <h3 className="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-3">
-        {title}
-      </h3>
+    <div className="bg-bg-inset rounded-[var(--radius-xl)] p-4">
+      <div className="flex items-center gap-2.5 mb-4">
+        <span className="text-text-muted">{icon}</span>
+        <h3 className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
+          {title}
+        </h3>
+      </div>
       <div className="flex flex-col gap-4">
         {children}
       </div>
@@ -168,32 +175,51 @@ function SettingsRow({ label, children }: { label: string; children: React.React
   )
 }
 
-function ThemeOption({
+function ThemeCard({
   label,
   icon,
   active,
   onClick,
+  previewBg,
+  previewText,
+  previewAccent,
 }: {
   label: string
   icon: React.ReactNode
   active: boolean
   onClick: () => void
+  previewBg: string
+  previewText: string
+  previewAccent: string
 }) {
   return (
     <button
       onClick={onClick}
       className={`
-        flex items-center gap-2.5 h-10 px-5
-        text-[13px] font-medium
-        rounded-[var(--radius-pill)] transition-theme border
+        flex flex-col items-center gap-2 p-3 min-w-[110px]
+        text-[12px] font-medium
+        rounded-[var(--radius-xl)] transition-theme border
         ${active
-          ? 'bg-bg-selected border-accent/30 text-accent'
-          : 'bg-bg-hover border-transparent text-text-secondary hover:text-text-primary'
+          ? 'border-accent/40 shadow-sm'
+          : 'border-transparent hover:border-border'
         }
       `}
     >
-      {icon}
-      {label}
+      {/* Theme preview mini */}
+      <div
+        className="w-full h-[48px] rounded-[var(--radius-lg)] border border-border/50 overflow-hidden flex flex-col"
+        style={{ backgroundColor: previewBg }}
+      >
+        <div className="h-2.5" style={{ backgroundColor: previewAccent }} />
+        <div className="flex-1 flex items-center justify-center gap-1 px-2">
+          <div className="w-8 h-1 rounded-full" style={{ backgroundColor: previewText, opacity: 0.6 }} />
+          <div className="w-5 h-1 rounded-full" style={{ backgroundColor: previewText, opacity: 0.3 }} />
+        </div>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className={active ? 'text-accent' : 'text-text-muted'}>{icon}</span>
+        <span className={active ? 'text-accent' : 'text-text-secondary'}>{label}</span>
+      </div>
     </button>
   )
 }

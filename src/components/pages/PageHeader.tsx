@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react'
-import { Smile, Image } from 'lucide-react'
+import { Smile } from 'lucide-react'
 import { usePages } from '../../hooks/use-pages'
 import { IconPicker } from './IconPicker'
 import { TagManager } from './TagManager'
@@ -45,31 +45,19 @@ export function PageHeader() {
           <button
             onClick={() => update(selectedPage.id, { icon: '📄' })}
             className="
-              inline-flex items-center gap-2 h-8 px-3.5
-              text-[13px] text-text-muted font-medium
-              bg-transparent border border-border
-              rounded-[var(--radius-pill)]
+              inline-flex items-center gap-2 h-7 px-3
+              text-[12px] text-text-muted font-medium
+              bg-bg-inset border-none
+              rounded-[var(--radius-md)]
               hover:bg-bg-hover hover:text-text-secondary
+              shadow-sm hover:shadow-md
               transition-theme
             "
           >
-            <Smile className="w-4 h-4" />
+            <Smile className="w-3.5 h-3.5" />
             Add page icon
           </button>
         )}
-        <button
-          className="
-            inline-flex items-center gap-2 h-8 px-3.5
-            text-[13px] text-text-muted font-medium
-            bg-transparent border border-border
-            rounded-[var(--radius-pill)]
-            hover:bg-bg-hover hover:text-text-secondary
-            transition-theme
-          "
-        >
-          <Image className="w-4 h-4" />
-          Add page cover
-        </button>
       </div>
 
       {/* Page icon — shown when set */}

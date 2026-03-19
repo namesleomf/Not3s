@@ -27,6 +27,9 @@ export function Sidebar() {
       <Separator className="mx-4 my-1.5 opacity-60" />
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-1">
+        <div className="px-3 pt-1 pb-1.5">
+          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">Pages</span>
+        </div>
         <PageTree />
       </div>
 
