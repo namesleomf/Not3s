@@ -29,6 +29,7 @@ export const DEFAULT_UI_STATE: UIState = {
   sidebarOpenMobile: false,
   settingsOpen: false,
   commandMenuOpen: false,
+  importDialogOpen: false,
   expandedPageIds: [],
 }
 

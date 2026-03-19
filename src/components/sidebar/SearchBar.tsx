@@ -10,6 +10,7 @@ export function SearchBar() {
       onValueChange={setSearch}
       placeholder="Search pages..."
       compact
+      data-sidebar-search
     />
   )
 }

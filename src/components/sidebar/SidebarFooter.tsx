@@ -1,12 +1,12 @@
-import { useState } from 'react'
 import { Settings, Upload } from 'lucide-react'
 import { IconButton } from '../ui/IconButton'
 import { useSettings } from '../../hooks/use-settings'
+import { useWorkspace } from '../../context/workspace-context'
 import { ImportDialog } from '../import/ImportDialog'
 
 export function SidebarFooter() {
   const { toggleSettingsPanel } = useSettings()
-  const [importOpen, setImportOpen] = useState(false)
+  const { state, dispatch } = useWorkspace()
 
   return (
     <>
@@ -14,7 +14,7 @@ export function SidebarFooter() {
         <IconButton
           size="md"
           label="Import pages"
-          onClick={() => setImportOpen(true)}
+          onClick={() => dispatch({ type: 'UI_SET', payload: { importDialogOpen: true } })}
         >
           <Upload />
         </IconButton>
@@ -27,7 +27,7 @@ export function SidebarFooter() {
         </IconButton>
       </div>
 
-      <ImportDialog open={importOpen} onClose={() => setImportOpen(false)} />
+      <ImportDialog open={state.ui.importDialogOpen} onClose={() => dispatch({ type: 'UI_SET', payload: { importDialogOpen: false } })} />
     </>
   )
 }
