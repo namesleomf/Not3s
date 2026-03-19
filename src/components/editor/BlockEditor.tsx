@@ -3,11 +3,13 @@ import { BlockItem } from './BlockItem'
 import { FloatingToolbar } from './FloatingToolbar'
 import { useBlockEditor } from '../../hooks/use-block-editor'
 import { useTextSelection } from '../../hooks/use-text-selection'
+import { useBlockDrag } from '../../hooks/use-block-drag'
 
 export function BlockEditor() {
   const editor = useBlockEditor()
   const containerRef = useRef<HTMLDivElement>(null)
   const selection = useTextSelection(containerRef)
+  const drag = useBlockDrag()
 
   // Focus first block on mount if none focused
   useEffect(() => {
@@ -23,7 +25,7 @@ export function BlockEditor() {
       <FloatingToolbar selection={selection} />
 
       {editor.blocks.map((block) => (
-        <BlockItem key={block.id} block={block} editor={editor} />
+        <BlockItem key={block.id} block={block} editor={editor} drag={drag} />
       ))}
 
       {/* Click below blocks to add a new one */}

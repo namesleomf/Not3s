@@ -9,10 +9,12 @@ import {
 } from 'lucide-react'
 import type { Block, BlockType } from '../../types'
 import type { BlockEditorAPI } from '../../hooks/use-block-editor'
+import type { BlockDragAPI } from '../../hooks/use-block-drag'
 
 interface BlockItemProps {
   block: Block
   editor: BlockEditorAPI
+  drag?: BlockDragAPI
 }
 
 // Placeholder text per block type
@@ -44,7 +46,7 @@ const typeStyles: Partial<Record<BlockType, string>> = {
   toggle: 'text-[15px] leading-relaxed',
 }
 
-export function BlockItem({ block, editor }: BlockItemProps) {
+export function BlockItem({ block, editor, drag }: BlockItemProps) {
   const contentRef = useRef<HTMLDivElement>(null)
   const [showSlashMenu, setShowSlashMenu] = useState(false)
   const isFocused = editor.focusedBlockId === block.id
@@ -209,19 +211,38 @@ export function BlockItem({ block, editor }: BlockItemProps) {
     editor.transformBlock(block.id, type)
   }
 
+  const isDragOver = drag?.state.dragOverId === block.id
+  const dropPosition = drag?.state.dropPosition
+  const isDragged = drag?.state.dragId === block.id
+
+  const dragProps = drag
+    ? {
+        onDragOver: (e: React.DragEvent) => drag.handleDragOver(e, block.id),
+        onDragLeave: drag.handleDragLeave,
+        onDrop: (e: React.DragEvent) => drag.handleDrop(e, editor.blocks, editor.reorderBlock),
+        onDragEnd: drag.handleDragEnd,
+      }
+    : {}
+
+  const dropIndicatorClass = isDragOver
+    ? dropPosition === 'before'
+      ? 'border-t-2 border-t-accent'
+      : 'border-b-2 border-b-accent'
+    : ''
+
   // Divider blocks are non-editable
   if (block.type === 'divider') {
     return (
-      <div className="group relative flex items-center py-2 px-1">
-        <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} />
+      <div className={`group relative flex items-center py-2 px-1 ${dropIndicatorClass} ${isDragged ? 'opacity-30' : ''}`} {...dragProps}>
+        <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
         <hr className="flex-1 border-separator" />
       </div>
     )
   }
 
   return (
-    <div className="group relative flex items-start py-0.5 px-1">
-      <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} />
+    <div className={`group relative flex items-start py-0.5 px-1 ${dropIndicatorClass} ${isDragged ? 'opacity-30' : ''}`} {...dragProps}>
+      <BlockHandle onAdd={() => editor.addBlock('paragraph', block.id)} onDragStart={drag ? (e) => drag.handleDragStart(e, block.id) : undefined} />
 
       {/* Block-type prefix */}
       <BlockPrefix block={block} editor={editor} />
@@ -254,7 +275,7 @@ export function BlockItem({ block, editor }: BlockItemProps) {
 
 // --- Sub-components ---
 
-function BlockHandle({ onAdd }: { onAdd: () => void }) {
+function BlockHandle({ onAdd, onDragStart }: { onAdd: () => void; onDragStart?: (e: React.DragEvent) => void }) {
   return (
     <div className="flex items-center gap-0.5 mr-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
       <button
@@ -264,7 +285,11 @@ function BlockHandle({ onAdd }: { onAdd: () => void }) {
       >
         <Plus className="w-3.5 h-3.5" />
       </button>
-      <span className="flex items-center justify-center w-5 h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover cursor-grab transition-theme">
+      <span
+        draggable={!!onDragStart}
+        onDragStart={onDragStart}
+        className="flex items-center justify-center w-5 h-5 rounded-[var(--radius-sm)] text-text-muted hover:bg-bg-hover cursor-grab active:cursor-grabbing transition-theme"
+      >
         <GripVertical className="w-3.5 h-3.5" />
       </span>
     </div>

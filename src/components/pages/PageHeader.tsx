@@ -1,8 +1,9 @@
 import { useRef, useEffect } from 'react'
 import { usePages } from '../../hooks/use-pages'
+import { IconPicker } from './IconPicker'
 
 export function PageHeader() {
-  const { selectedPage, rename } = usePages()
+  const { selectedPage, rename, update } = usePages()
   const titleRef = useRef<HTMLHeadingElement>(null)
 
   // Sync title content when page changes
@@ -30,18 +31,14 @@ export function PageHeader() {
   }
 
   return (
-    <div className="px-12 pt-10 pb-2 max-w-[720px] mx-auto w-full">
+    <div className="group px-12 pt-10 pb-2 max-w-[720px] mx-auto w-full">
       {/* Page icon */}
-      {selectedPage.icon && (
-        <div className="mb-3">
-          <button
-            className="text-[40px] leading-none hover:bg-bg-hover rounded-[var(--radius-md)] p-1 -ml-1 transition-theme"
-            title="Change icon"
-          >
-            {selectedPage.icon}
-          </button>
-        </div>
-      )}
+      <div className="mb-3">
+        <IconPicker
+          currentIcon={selectedPage.icon}
+          onSelect={(icon) => update(selectedPage.id, { icon })}
+        />
+      </div>
 
       {/* Editable title */}
       <h1

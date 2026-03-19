@@ -9,6 +9,7 @@ import { NoPageSelected } from './components/pages/NoPageSelected'
 import { TrashView } from './components/pages/TrashView'
 import { ArchiveView } from './components/pages/ArchiveView'
 import { SettingsPanel } from './components/settings/SettingsPanel'
+import { CommandPalette } from './components/editor/CommandPalette'
 import { usePages } from './hooks/use-pages'
 import { useSearch } from './hooks/use-search'
 import { useKeyboardShortcuts } from './hooks/use-keyboard-shortcuts'
@@ -71,6 +72,7 @@ export default function App() {
           <MainContent />
         </AppShell>
         <SettingsPanel />
+        <CommandPalette />
       </ThemeProvider>
     </WorkspaceProvider>
   )

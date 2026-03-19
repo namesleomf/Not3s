@@ -10,6 +10,7 @@ export interface BlockEditorAPI {
   deleteBlock: (id: string) => string | null // returns ID of block to focus
   transformBlock: (id: string, newType: BlockType) => void
   moveBlock: (id: string, direction: 'up' | 'down') => void
+  reorderBlock: (fromId: string, toId: string, position: 'before' | 'after') => void
   duplicateBlock: (id: string) => void
   focusedBlockId: string | null
   setFocusedBlockId: (id: string | null) => void
@@ -99,6 +100,21 @@ export function useBlockEditor(): BlockEditorAPI {
     [blocks, setBlocks],
   )
 
+  const reorderBlock = useCallback(
+    (fromId: string, toId: string, position: 'before' | 'after') => {
+      const fromIdx = blocks.findIndex((b) => b.id === fromId)
+      const toIdx = blocks.findIndex((b) => b.id === toId)
+      if (fromIdx === -1 || toIdx === -1) return
+
+      const newBlocks = blocks.filter((b) => b.id !== fromId)
+      const insertIdx = newBlocks.findIndex((b) => b.id === toId)
+      const finalIdx = position === 'before' ? insertIdx : insertIdx + 1
+      newBlocks.splice(finalIdx, 0, blocks[fromIdx])
+      setBlocks(newBlocks)
+    },
+    [blocks, setBlocks],
+  )
+
   const duplicateBlock = useCallback(
     (id: string) => {
       const idx = blocks.findIndex((b) => b.id === id)
@@ -119,6 +135,7 @@ export function useBlockEditor(): BlockEditorAPI {
     deleteBlock,
     transformBlock,
     moveBlock,
+    reorderBlock,
     duplicateBlock,
     focusedBlockId,
     setFocusedBlockId,
